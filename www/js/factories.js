@@ -6,11 +6,15 @@ module.factory("Article", function ($resource) {
     return $resource(resturl + "article/:id");
 });
 
+module.factory("User", function ($resource) {
+    return $resource(resturl + "user/:id");
+});
+
 module.factory("Login", function ($resource) {
     return $resource(resturl + "login/app");
 });
 
 module.factory("Register", function ($resource) {
-    return $resource(resturl + "register");
+    return $resource(resturl + "signup/app");
 });
 

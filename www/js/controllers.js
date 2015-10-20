@@ -1,121 +1,75 @@
 angular.module('einkaufsapp.controllers', [])
 
-.controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
-
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
-
-    // Form data for the login modal
-    $scope.loginData = {};
-
-    // Create the login modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-        scope: $scope
-    }).then(function (modal) {
-        $scope.modal = modal;
-    });
-
-    // Triggered in the login modal to close it
-    $scope.closeLogin = function () {
-        $scope.modal.hide();
-    };
-
-    // Open the login modal
-    $scope.login = function () {
-        $scope.modal.show();
-    };
-
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function () {
-        console.log('Doing login', $scope.loginData);
-
-        // Simulate a login delay. Remove this and replace with your login
-        // code if using a login system
-        $timeout(function () {
-            $scope.closeLogin();
-        }, 1000);
-    };
+.controller('AppCtrl', function ($scope, $ionicModal, $timeout, $state) {
+        $scope.username = localStorage.getItem('username');
+    
+        $scope.logout = function () {
+            localStorage.clear();
+            $state.go('welcome');
+        }
 })
 
 
-.controller('WelcomeCtrl', function ($scope, $ionicModal, Login, $state) {
-    $scope.loginData = {};
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-        scope: $scope
-    }).then(function (modal) {
-        $scope.modal = modal;
-    });
-    $scope.closeLogin = function () {
-        $scope.modal.hide();
-    };
+.controller('WelcomeCtrl', function ($scope, $ionicModal, Login, $state) {    
+    var init = function () {
+        var username = localStorage.getItem('username');
+        var password = localStorage.getItem('password');
+        $scope.loginData = {username: username, password: password};
+        Login.save($scope.loginData, function (response) {
+            if (response.status == "ok") {
+                $state.go('app.home');
+                localStorage.setItem('username', $scope.loginData.username);
+                localStorage.setItem('password', $scope.loginData.password);
+            }
+            else {
+                console.log(response);
+            }
+        });
+    }
+    init();
+
     $scope.login = function () {
         $state.go('login');
     };
-    $scope.doLogin = function () {
-        console.log('Doing login', $scope.loginData);
-        Login.save($scope.loginData, function (response) {
-            if (response.status == "ok") $state.go('app.browse');
-        });
 
-
-
-        $scope.closeLogin();
-    }
+    $scope.register = function () {
+        $state.go('register');
+    };
 })
 
 .controller('LoginCtrl', function ($state, $sanitize, $scope, Login) {
     $scope.loginData = {};
+    $scope.error = {};
 
     $scope.doLogin = function () {
-        console.log('Doing login', $scope.loginData);
         Login.save($scope.loginData, function (response) {
-            if (response.status == "ok") $state.go('app.browse');
+            if (response.status == "ok") {
+                $state.go('app.home');
+                localStorage.setItem('username', $scope.loginData.username);
+                localStorage.setItem('password', $scope.loginData.password);
+            }
+            else {
+                console.log(response);
+                $scope.error.state = true;
+                $scope.error.message = response.message;
+            }
         });
     }
 })
 
-.controller('RegisterCtrl', function ($state, $sanitize, $scope, Login) {
+.controller('RegisterCtrl', function ($state, $sanitize, $scope, Register) {
     $scope.registerData = {};
-
-    $scope.doLogin = function () {
-        Login.save($scope.loginData, function (response) {
-            if (response.status == "ok") $state.go('app.browse');
+    $scope.register = function () {
+        Register.save($scope.registerData, function (response) {
+            if (response.status == "ok") {
+                $state.go('app.home');
+                localStorage.setItem('username', $scope.registerData.username);
+                localStorage.setItem('password', $scope.registerData.password);
+            } else alert(response.message);
         });
     }
 })
 
-
-.controller('PlaylistsCtrl', function ($scope) {
-    $scope.playlists = [
-        {
-            title: 'Reggae',
-            id: 1
-        },
-        {
-            title: 'Chill',
-            id: 2
-        },
-        {
-            title: 'Dubstep',
-            id: 3
-        },
-        {
-            title: 'Indie',
-            id: 4
-        },
-        {
-            title: 'Rap',
-            id: 5
-        },
-        {
-            title: 'Cowbell',
-            id: 6
-        }
-  ];
+.controller('HomeCtrl', function ($scope, User){
+    $scope.User = User.query();
 })
-
-.controller('PlaylistCtrl', function ($scope, $stateParams, $state) {});

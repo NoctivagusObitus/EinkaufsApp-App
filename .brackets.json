@@ -1,5 +1,8 @@
 {
     "jscodehints.detectedExclusions": [
-        "E:/Development/Projects/Ionic/test/www/js/controllers.js"
+        "E:/Development/Projects/Ionic/test/www/js/controllers.js",
+        "E:/Development/Projects/EinkaufsApp/EinkaufsApp-App/www/js/factories.js",
+        "E:/Development/Projects/EinkaufsApp/EinkaufsApp-App/www/js/app.js",
+        "E:/Development/Projects/EinkaufsApp/EinkaufsApp-App/www/js/controllers.js"
     ]
 }
