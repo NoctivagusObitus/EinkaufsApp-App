@@ -1,0 +1,37 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Neue Gruppe</h1>
+        <button class="button button-clear button-positive" ng-click="closeAddModal()">Abbrechen</button>
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+            <form ng-submit="AddGroup()">
+                <label class="item item-input">
+                    <input type="text" placeholder="Gruppenname" ng-model="groupname">
+                </label>
+                <ion-list>
+                    <div class="list list-inset">
+                        <label class="item item-input">
+                            <i class="icon ion-search placeholder-icon"></i>
+                            <input type="text" placeholder="Benutzer hinzufügen" ng-model="query">
+                        </label>
+                        <a ng-repeat="user in users | filter:query | limitTo:3" class="item item-icon-right" ng-click="addUser(user)">
+                    {{user.username}}
+                       <i class="icon ion-plus"></i>
+                    </a>
+                    </div>
+                    <h3>Gruppenmitglieder</h3>
+                    <div class="list list-inset">
+                        <ion-item ng-repeat="user in submitusers" class="item-icon-right">
+                            {{user.username}}
+                            <i class="icon ion-minus"></i>
+                        </ion-item>
+                    </div>
+
+                </ion-list>
+                <button class="button button-positive" type="submit">Erstellen</button>
+            </form>
+        </ion-list>
+
+    </ion-content>
+</ion-modal-view>

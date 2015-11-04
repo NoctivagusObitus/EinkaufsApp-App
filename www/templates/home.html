@@ -1,8 +1,38 @@
 <ion-view view-title="Home">
-  <ion-content>
-    <h1>Home Screen</h1>
-    <ion-list>
-        <ion-item ng-repeat="us in User">{{us.username}}</ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+        <div class="row">
+            <div class="col">
+                <a href="#/app/purchases">
+                    <div class="item item-image">
+                        <img src="http://lorempixel.com/200/200">
+                    </div>
+                    <div class="item">Einkäufe</div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="#/app/auswertung">
+                    <div class="item item-image">
+                        <img src="http://lorempixel.com/200/200">
+                    </div>
+                    <div class="item">Auswertungen</div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a href="#/app/groups">
+                    <div class="item item-image">
+                        <img src="http://lorempixel.com/200/200">
+                    </div>
+                    <div class="item">Gruppen</div>
+                </a>
+            </div>
+            <div class="col">
+                <div class="item item-image">
+                    <img src="http://lorempixel.com/200/200">
+                </div>
+                <div class="item">Einstellungen</div>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

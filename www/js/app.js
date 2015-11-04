@@ -51,14 +51,14 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
     })
 
     .state('app.purchase', {
-        url: '/purchase',
+        url: '/purchases',
         views: {
             'menuContent': {
-                templateUrl: 'templates/purchase.html'
+                templateUrl: 'templates/purchases.html'
             }
         }
     })
-    
+
     .state('app.home', {
         url: '/home',
         views: {
@@ -68,13 +68,32 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
-    
 
     .state('app.auswertung', {
         url: '/auswertung',
         views: {
             'menuContent': {
                 templateUrl: 'templates/auswertung.html'
+            }
+        }
+    })
+
+    .state('app.groups', {
+        url: '/groups',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/groups.html',
+                controller: 'GroupsCtrl'
+            }
+        }
+    })
+    
+    .state('app.group', {
+        url: '/groups/:groupId',
+        views: {
+            'menuContent' : {
+                templateUrl: 'templates/group.html',
+                controller: 'GroupCtrl'
             }
         }
     })
@@ -89,7 +108,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         }
     });
 
-    
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/welcome');
 });

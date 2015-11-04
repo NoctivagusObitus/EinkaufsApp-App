@@ -1,0 +1,14 @@
+
+ <ion-view view-title="Meine Gruppen">
+  <ion-content>
+    <button class="button button-full" ng-click="showAddModal()">Neue Gruppe</button>
+     <ion-list>
+      <ion-item ng-repeat="group in groups" href="#/app/groups/{{group.id}}">
+        {{group.title}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
+
+  
+</ion-view>
