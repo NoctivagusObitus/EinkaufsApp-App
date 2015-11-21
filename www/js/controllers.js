@@ -118,5 +118,4 @@ angular.module('einkaufsapp.controllers', [])
 })
 
 .controller('HomeCtrl', function ($scope, User) {
-    $scope.User = User.query();
 })
