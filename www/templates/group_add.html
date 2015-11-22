@@ -1,0 +1,30 @@
+<ion-view view-title="Neue Gruppe">
+  <ion-content>
+    <form ng-submit="AddGroup()">
+      <ion-list>
+          <input type="text" ng-model="newData.group">
+      </ion-list>
+      <ion-list>
+        <div class="list list-inset">
+          <label class="item item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" placeholder="Benutzer hinzufügen" ng-model="newData.query">
+          </label>
+          <a ng-repeat="user in users | filter:newData.query | limitTo:3" class="item item-icon-right" ng-click="addUser(user)">
+                    {{user.username}}
+           <i class="icon ion-plus"></i>
+          </a>
+        </div>
+        <h3>Gruppenmitglieder</h3>
+        <div class="list list-inset">
+          <ion-item ng-repeat="user in submitusers" class="item-icon-right">
+            {{user.username}}
+            <i class="icon ion-minus"></i>
+          </ion-item>
+        </div>
+      </ion-list>
+      <button class="button button-positive" type="submit">Erstellen</button>
+
+    </form>
+  </ion-content>
+</ion-view>

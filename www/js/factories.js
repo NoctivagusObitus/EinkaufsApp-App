@@ -28,11 +28,18 @@ module.factory("User", function ($http) {
 module.factory("Group", function ($http) {
     var url = 'group';
     var Group = {};
+
     Group.getGroupsForUser = function (user_id) {
-        console.log("k");
-        return $http.get(resturl + url + '/creator/' + user_id);
+        return $http.get(resturl + url + '/member/' + user_id);
     };
 
+    Group.getUsersByGroup = function(id){
+        return $http.get(resturl + url + '/groupusers/' + id);
+    };
+
+    Group.getRichGroup = function(id){
+        return $http.get(resturl + url + '/rich/' + id);
+    };
     Group.getGroups = function (id) {
         return $http.get(resturl + url + '/' + id);
     };
