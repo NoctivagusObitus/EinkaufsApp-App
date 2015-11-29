@@ -1,0 +1,25 @@
+<ion-view style="" title="Signup">
+    <ion-content class="has-header" scroll="false" padding="'true'">
+        <form style="" class="list">
+            <ion-list style="">
+                <label style="" class="item item-input">
+                    <span class="input-label">Username</span>
+                    <input placeholder="Jürgen Meier" type="text" ng-model="registerData.username">
+                </label>
+                <label style="" class="item item-input">
+                    <span class="input-label">E-Mail</span>
+                    <input placeholder="example@gmail.de" type="email" ng-model="registerData.email">
+                </label>
+                <label style="" class="item item-input">
+                    <span class="input-label">Passwort</span>
+                    <input placeholder="" type="text" ng-model="registerData.password">
+                </label>
+                <label style="" class="item item-input">
+                    <span class="input-label">Passwort wiederholen</span>
+                    <input placeholder="" type="text" ng-model="registerData.confirm">
+                </label>
+            </ion-list>
+            <a style="" class="button button-stable button-block " type="submit">Sign up</a>
+        </form>
+    </ion-content>
+</ion-view>

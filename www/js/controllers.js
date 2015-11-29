@@ -5,7 +5,7 @@ angular.module('einkaufsapp.controllers', [])
 
   $scope.logout = function() {
     localStorage.clear();
-    $state.go('welcome');
+    $state.go('login');
   }
 })
 
@@ -39,6 +39,24 @@ angular.module('einkaufsapp.controllers', [])
 })
 
 .controller('LoginCtrl', function($state, $sanitize, $scope, Login) {
+  var init = function() {
+    var username = localStorage.getItem('username');
+    var password = localStorage.getItem('password');
+    $scope.loginData = {
+      username: username,
+      password: password
+    };
+    Login.save($scope.loginData, function(response) {
+      if (response.status == "ok") {
+        $state.go('app.home');
+        localStorage.setItem('username', $scope.loginData.username);
+        localStorage.setItem('password', $scope.loginData.password);
+      } else {
+        console.log(response);
+      }
+    });
+  }
+  init();
   $scope.loginData = {};
   $scope.error = {};
 

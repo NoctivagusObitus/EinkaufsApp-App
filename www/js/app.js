@@ -40,7 +40,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
 
     .state('register', {
         url: '/register',
-        templateUrl: 'templates/register.html',
+        templateUrl: 'templates/signup.html',
         controller: 'RegisterCtrl'
     })
 
@@ -82,7 +82,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         url: '/groups',
         views: {
             'menuContent': {
-                templateUrl: 'templates/groups.html',
+                templateUrl: 'templates/gruppenverwaltung.html',
                 controller: 'GroupsCtrl'
             }
         }
@@ -102,7 +102,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         url: '/group-add',
         views: {
             'menuContent' : {
-                templateUrl: 'templates/group_add.html',
+                templateUrl: 'templates/neueGruppe.html',
                 controller: 'GroupAddCtrl'
             }
         }
@@ -120,5 +120,5 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
 
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/welcome');
+    $urlRouterProvider.otherwise('/login');
 });

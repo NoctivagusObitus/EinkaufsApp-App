@@ -1,0 +1,21 @@
+<ion-view style="" title="Neue Gruppe">
+    <ion-content class="has-header" padding="'true'">
+        <form style="" class="list">
+            <label style="" class="item item-input">
+                <span class="input-label">Name :</span>
+                <input placeholder="" type="text">
+            </label>
+        </form>
+        <h4 style="">User auswählen :</h4>
+        <form style="" class="list">
+            <label style="" class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input placeholder="User Suchen" type="search"  ng-model="newData.query">
+                <select type="search" ng-model="newData.query" ng-options="user.username for user in users | filter:newData.query | limitTo:6">
+                </select>
+            </label>
+            <ion-checkbox style="" ng-repeat="user in submitusers">{{user.username}}</ion-checkbox>
+        </form>
+        <a style="" class="button button-stable button-block " href="#/side-menu/groups" menu-close="">Gruppe erstellen</a>
+    </ion-content>
+</ion-view>
