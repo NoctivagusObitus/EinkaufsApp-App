@@ -50,7 +50,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         controller: 'WelcomeCtrl'
     })
 
-    .state('app.purchase', {
+    .state('app.purchases', {
         url: '/purchases',
         views: {
             'menuContent': {
@@ -68,6 +68,16 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
+    
+    .state('app.market', {
+        url: '/market',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/market.html',
+            }
+        }
+    })
+
 
     .state('app.auswertung', {
         url: '/auswertung',
@@ -102,7 +112,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         url: '/group-add',
         views: {
             'menuContent' : {
-                templateUrl: 'templates/neueGruppe.html',
+                templateUrl: 'templates/group_add.html',
                 controller: 'GroupAddCtrl'
             }
         }
