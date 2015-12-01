@@ -1,8 +1,31 @@
-<ion-view view-title="Einkäufe">
-  <ion-content>
-    <h1>Meine Einkäufe</h1>
-    <ion-list>
-        <ion-item ng-repeat="einkauf in einkaufe">{{einkauf.datum}}</ion-item>
-    </ion-list>
-  </ion-content>
+<ion-view style="" title="Einkaufen">
+    <ion-content class="has-header" padding="'true'">
+        <h3 style="">Markt 1 (Auswahl)</h3>
+        <div style="" class="list card">
+            <div class="row">
+                <div class="col col-33">Artikel</div>
+                <div class="col col-33 col-offset-33">Menge</div>
+                <div class="col col-33 col-offset-66">Einzelpreis</div>
+            </div>
+            <div class="item item-body">
+                <ion-list style="">
+                    <ion-list style="">
+                        <div class="row">
+                        <div class="col col-33"><ion-item style="" menu-close="" href="#/app/product_details">Butter</ion-item></div>
+                        <div class="col col-33 col-offset-33">1</div>
+                        <div class="col col-33 col-offset-66">0,89 €</div>
+                        </div>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 2</ion-item>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 3</ion-item>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 4</ion-item>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 5</ion-item>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 6</ion-item>
+                        <ion-item style="" menu-close="" href="#/app/product_details">Item 7</ion-item>
+                    </ion-list>
+                </ion-list>
+            </div>
+        </div>
+        <button style="" class="button button-positive button-block  icon-right ion-android-camera">Barcode Scanner</button>
+        <a style="" class="button button-stable button-block " href="#/app/purchases_match" menu-close="">Einkauf abschließen</a>
+    </ion-content>
 </ion-view>

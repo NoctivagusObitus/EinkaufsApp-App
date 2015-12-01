@@ -49,12 +49,48 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         templateUrl: 'templates/welcome.html',
         controller: 'WelcomeCtrl'
     })
-
+    
+     .state('app.purchases_overview', {
+        url: '/purchases_overview',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/purchase_overview.html'
+            }
+        }
+    })
+    
     .state('app.purchases', {
         url: '/purchases',
         views: {
             'menuContent': {
                 templateUrl: 'templates/purchases.html'
+            }
+        }
+    })
+    
+     .state('app.purchases_match', {
+        url: '/purchases_match',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/purchases_match.html'
+            }
+        }
+    })
+    
+    .state('app.purchases_details', {
+        url: '/purchases_details',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/purchases_details.html'
+            }
+        }
+    })
+    
+    .state('app.product_details', {
+        url: '/product_details',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/product_details.html'
             }
         }
     })
@@ -73,17 +109,24 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         url: '/market',
         views: {
             'menuContent': {
-                templateUrl: 'templates/market.html',
+                templateUrl: 'templates/market_select.html',
             }
         }
     })
 
-
+      .state('app.settings', {
+        url: '/settings',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/einstellungen.html',
+            }
+        }
+    })
     .state('app.auswertung', {
         url: '/auswertung',
         views: {
             'menuContent': {
-                templateUrl: 'templates/auswertung.html'
+                templateUrl: 'templates/auswertungen.html'
             }
         }
     })

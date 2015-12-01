@@ -1,5 +1,5 @@
 var resturl = "https://einkaufsapp-hftlswe.rhcloud.com/";
-var resturl = "http://localhost:3000/"
+//var resturl = "http://localhost:3000/"
 
 var module = angular.module('einkaufsapp.factories', ['ngResource']);
 
