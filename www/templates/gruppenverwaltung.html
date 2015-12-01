@@ -1,14 +1,10 @@
-<ion-view style="" title="Gruppenverwaltung">
+<ion-view style="" title="Gruppenverwaltung" cache-view="false">
   <ion-content class="has-header" padding="'true'">
     <a style="" class="button button-positive button-block  icon-left ion-android-contacts" href="#/app/group-add" menu-close="">Neue Gruppe</a>
     <div style="" class="list card">
       <div class="item item-divider">Meine Gruppen</div>
       <div class="item item-body">
         <ion-list style="" can-swipe="true">
-          <label style="" class="item item-input">
-            <i class="icon ion-search placeholder-icon"></i>
-            <input placeholder="" type="search">
-          </label>
           <ion-item ng-repeat="group in groups" href="#/app/groups/{{group._id}}">
             <p>{{group.name}}</p>
             <ion-option-button class="button-positive" ng-click="edit($index)">
@@ -17,9 +13,13 @@
             <ion-option-button class="button-assertive" ng-click="delete(group._id)">
               Delete
             </ion-option-button>
-          </ion-item>
+          </ion-item> 
         </ion-list>
       </div>
     </div>
   </ion-content>
 </ion-view>
+
+
+
+     

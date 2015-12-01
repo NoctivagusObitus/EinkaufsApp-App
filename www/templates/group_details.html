@@ -1,18 +1,23 @@
 <ion-view style="" title="Details">
     <ion-content class="has-header" padding="'true'">
-        <h2 style="">Mitglieder</h2>
-        <ion-list style="">
-            <label style="" class="item item-input">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input placeholder="" type="search">
-            </label>
+        <h2 style="">Gruppenname</h2>
+        <h4 style="">Mitglieder</h4>
+        <ion-list style="" can-swipe="true">
             <ion-item ng-repeat="user in users">{{user.username}}
               <span class="item-note">
                   {{user.permission}}
                 </span>
+            <ion-option-button class="button-positive">
+              Zum Administrator machen
+            </ion-option-button>
+            <ion-option-button class="button-assertive" ng-click="delete(group._id)">
+            Mitglied entfernen
+            </ion-option-button>
             </ion-item>
         </ion-list>
         <div style="width: 300px; height: 32px;" class="spacer"></div>
+        <button class="button button-full button-positive">Gruppennamen ändern</button>
+        <button class="button button-full button-assertive">Gruppe löschen</button>
         <a style="" class="button  button-icon button-small icon ion-android-arrow-back" href="#app/groups" menu-close=""></a>
         <ion-list style=""></ion-list>
     </ion-content>
