@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.factories'])
+angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.factories', 'einkaufsapp.services'])
 
 .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -44,30 +44,26 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
         controller: 'RegisterCtrl'
     })
 
-    .state('welcome', {
-        url: '/welcome',
-        templateUrl: 'templates/welcome.html',
-        controller: 'WelcomeCtrl'
-    })
-    
      .state('app.purchases_overview', {
         url: '/purchases_overview',
         views: {
             'menuContent': {
-                templateUrl: 'templates/purchase_overview.html'
+                templateUrl: 'templates/purchase_overview.html',
+                controller: 'PurchasesCtrl'
             }
         }
     })
-    
+
     .state('app.purchases', {
         url: '/purchases',
         views: {
             'menuContent': {
-                templateUrl: 'templates/purchases.html'
+                templateUrl: 'templates/purchases.html',
+                controller: 'PurchaseCtrl'
             }
         }
     })
-    
+
      .state('app.purchases_match', {
         url: '/purchases_match',
         views: {
@@ -76,7 +72,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
-    
+
     .state('app.purchases_details', {
         url: '/purchases_details',
         views: {
@@ -85,7 +81,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
-    
+
     .state('app.product_details', {
         url: '/product_details',
         views: {
@@ -104,12 +100,13 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
-
+//first selection
     .state('app.market', {
         url: '/market',
         views: {
             'menuContent': {
                 templateUrl: 'templates/market_select.html',
+                controller: 'MarketCtrl'
             }
         }
     })
@@ -157,16 +154,6 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             'menuContent' : {
                 templateUrl: 'templates/group_add.html',
                 controller: 'GroupAddCtrl'
-            }
-        }
-    })
-
-    .state('app.welcome', {
-        url: '/welcome',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/welcome.html',
-                controller: 'WelcomeCtrl'
             }
         }
     });

@@ -159,6 +159,7 @@ angular.module('einkaufsapp.controllers', [])
 
 .controller('GroupDetailCtrl', function($scope, User,  $stateParams, Group){
   $scope.users = [];
+
   var init = function() {
     Group.getUsersByGroup($stateParams.id).success(function(res){
       for(var i = 0; i < res.users.length; i++){
@@ -177,8 +178,62 @@ angular.module('einkaufsapp.controllers', [])
 
     });
   }
+
   init();
+
+  $scope.showDelete = function (){
+    if($scope.enabledelete == true)
+      $scope.enabledelete = false;
+    else
+      $scope.enabledelete = true;
+  }
+
+  /*var PopUp = $ionicPopup.show({
+      template: '<input type="password" ng-model="data.wifi">',
+      title: 'Enter Wi-Fi Password',
+      subTitle: 'Please use normal things',
+      scope: $scope,
+      buttons: [
+        { text: 'Cancel' },
+        {
+          text: '<b>Save</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.data.wifi) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              return $scope.data.wifi;
+            }
+          }
+        }
+      ]
+    });
+    myPopup.then(function(res) {
+      console.log('Tapped!', res);
+    });*/
+
+
+
 
 })
 
 .controller('HomeCtrl', function($scope, User) {})
+
+.controller('PurchaseCtrl', function($scope, Purchases, User){
+  var init = function(){
+    User.getUserByName(localStorage.getItem('username')).success(function(user){
+      Purchases.getPurchasesByOwner(user[0].id).success(function(purchases){
+        $scope.purchases = purchases;
+      });
+    });
+  }
+
+  init();
+})
+
+.controller('MarketCtrl', function($scope, Purchases, Stores){
+  var init = function(){
+
+  }
+});

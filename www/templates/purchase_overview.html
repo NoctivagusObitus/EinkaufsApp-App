@@ -2,11 +2,7 @@
     <ion-content class="has-header" padding="'true'">
         <h1 style="">Übersicht</h1>
         <ion-list style="">
-            <ion-item style="" href="#/app/purchases_details" menu-close="">Einkauf 1</ion-item>
-            <ion-item style="" href="#/app/purchases_details" menu-close="">Einkauf 2</ion-item>
-            <ion-item style="" href="#/app/purchases_details" menu-close="">Einkauf 3</ion-item>
-            <ion-item style="" href="#/app/purchases_details" menu-close="">Einkauf 4</ion-item>
-            <ion-item style="" href="#/app/purchases_details" menu-close="">Einkauf 5</ion-item>
+            <ion-item ng-repeat="purchase in purchases"style="" href="#/app/groups/{{purchase._id}}" menu-close="">{{purchase.Date}}</ion-item>
         </ion-list>
         <a style="" class="button button-stable button-block  icon-left ion-android-add" href="#/app/market" menu-close="">Neuer Einkauf</a>
     </ion-content>
