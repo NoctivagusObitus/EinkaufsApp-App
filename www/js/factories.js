@@ -54,7 +54,7 @@ module.factory("Group", function ($http) {
     };
 
     Group.deleteGroup = function (id) {
-        return $http.post(resturl + url + '/remove/' + id);
+        return $http.post(resturl + url + '/delete/' + id);
     };
 
     return Group;

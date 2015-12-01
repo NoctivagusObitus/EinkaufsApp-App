@@ -92,12 +92,22 @@ angular.module('einkaufsapp.controllers', [])
   var creatoruser = {};
 
   //Get Groups for Groupmembers ! :)
-  User.getUserByName(localStorage.getItem('username')).success(function(usera){
+  var init = function(){
+    User.getUserByName(localStorage.getItem('username')).success(function(usera){
       creatoruser = usera;
       Group.getGroupsForUser(creatoruser[0]._id).success(function(groups) {
         $scope.groups = groups;
       });
     });
+  }
+  init();
+
+    $scope.delete = function(id){
+      Group.deleteGroup(id).success(function(res){
+        init();
+        //tbd Error handling
+      });
+    }
 
 //Show Add View
   $scope.showAddModal = function() {
@@ -130,6 +140,7 @@ angular.module('einkaufsapp.controllers', [])
       });
 
       Group.addGroup(group[0]).success(function(res){
+        $state.go('app.groups')
         //tbd error handling
       });
     });
@@ -147,9 +158,22 @@ angular.module('einkaufsapp.controllers', [])
 })
 
 .controller('GroupDetailCtrl', function($scope, User,  $stateParams, Group){
+  $scope.users = [];
   var init = function() {
     Group.getUsersByGroup($stateParams.id).success(function(res){
-      console.log(res[0]);
+      for(var i = 0; i < res.users.length; i++){
+        var permissionString;
+        switch(res.users[i].permission){
+          case 1:
+            permissionString = "Member";
+            break;
+          case 2:
+            permissionString = "Admin";
+            break;
+        }
+        $scope.users.push({username: res.users[i].user_id.username, permission: permissionString});
+      }
+      console.log(res);
 
     });
   }
