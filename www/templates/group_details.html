@@ -1,0 +1,15 @@
+<ion-view style="" title="Details">
+    <ion-content class="has-header" padding="'true'">
+        <h2 style="">Mitglieder</h2>
+        <ion-list style="">
+            <label style="" class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input placeholder="" type="search">
+            </label>
+            <ion-item ng-repeat="user in users">{{user.name}}</ion-item>
+        </ion-list>
+        <div style="width: 300px; height: 32px;" class="spacer"></div>
+        <a style="" class="button  button-icon button-small icon ion-android-arrow-back" href="#/side-menu/groups" menu-close=""></a>
+        <ion-list style=""></ion-list>
+    </ion-content>
+</ion-view>

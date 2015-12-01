@@ -2,7 +2,7 @@
   <ion-content>
     <form ng-submit="AddGroup()">
       <ion-list>
-          <input type="text" ng-model="newData.group">
+          <input type="text" ng-model="newData.group" placeholder="Gruppenname">
       </ion-list>
       <ion-list>
         <div class="list list-inset">
@@ -19,7 +19,7 @@
         <div class="list list-inset">
           <ion-item ng-repeat="user in submitusers" class="item-icon-right">
             {{user.username}}
-            <i class="icon ion-minus"></i>
+            <i class="icon ion-minus" ng-click="removeUser($index)"></i>
           </ion-item>
         </div>
       </ion-list>

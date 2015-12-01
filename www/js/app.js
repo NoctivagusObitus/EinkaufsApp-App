@@ -68,7 +68,7 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
             }
         }
     })
-    
+
     .state('app.market', {
         url: '/market',
         views: {
@@ -99,11 +99,11 @@ angular.module('einkaufsapp', ['ionic', 'einkaufsapp.controllers', 'einkaufsapp.
     })
 
     .state('app.group', {
-        url: '/groups/:groupId',
+        url: '/groups/:id',
         views: {
             'menuContent' : {
-                templateUrl: 'templates/group.html',
-                controller: 'GroupCtrl'
+                templateUrl: 'templates/group_details.html',
+                controller: 'GroupDetailCtrl'
             }
         }
     })

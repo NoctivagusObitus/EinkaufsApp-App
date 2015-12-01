@@ -135,11 +135,25 @@ angular.module('einkaufsapp.controllers', [])
     });
   };
 
+  $scope.removeUser = function(index){
+    if ($scope.submitusers)
+      $scope.submitusers.splice(index, 1);
+  };
+
   $scope.addUser = function(user) {
     if (!$scope.submitusers) $scope.submitusers = [];
     $scope.submitusers.push(user);
   };
+})
 
+.controller('GroupDetailCtrl', function($scope, User,  $stateParams, Group){
+  var init = function() {
+    Group.getUsersByGroup($stateParams.id).success(function(res){
+      console.log(res[0]);
+
+    });
+  }
+  init();
 
 })
 
