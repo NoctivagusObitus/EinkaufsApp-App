@@ -6,7 +6,11 @@
                 <i class="icon ion-search placeholder-icon"></i>
                 <input placeholder="" type="search">
             </label>
-            <ion-item ng-repeat="user in users">{{user.name}}</ion-item>
+            <ion-item ng-repeat="user in users">{{user.username}}
+              <span class="item-note">
+                  {{user.permission}}
+                </span>
+            </ion-item>
         </ion-list>
         <div style="width: 300px; height: 32px;" class="spacer"></div>
         <a style="" class="button  button-icon button-small icon ion-android-arrow-back" href="#/side-menu/groups" menu-close=""></a>

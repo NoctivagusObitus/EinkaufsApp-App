@@ -1,5 +1,5 @@
 var resturl = "https://einkaufsapp-hftlswe.rhcloud.com/";
-var resturl = "http://localhost:3000/"
+//var resturl = "http://localhost:3000/"
 
 var module = angular.module('einkaufsapp.factories', ['ngResource']);
 
@@ -54,7 +54,7 @@ module.factory("Group", function ($http) {
     };
 
     Group.deleteGroup = function (id) {
-        return $http.post(resturl + url + '/remove/' + id);
+        return $http.post(resturl + url + '/delete/' + id);
     };
 
     return Group;
