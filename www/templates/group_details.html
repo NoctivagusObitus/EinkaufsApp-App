@@ -1,16 +1,16 @@
 <ion-view style="" title="Details">
     <ion-content class="has-header" padding="'true'">
-        <h2 style="">Gruppenname</h2>
+        <h2 style="">{{group.name}}</h2>
         <h4 style="">Mitglieder</h4>
         <ion-list style="" can-swipe="true">
             <ion-item ng-repeat="user in users">{{user.username}}
               <span class="item-note">
                   {{user.permission}}
                 </span>
-            <ion-option-button class="button-positive">
+            <ion-option-button class="button-positive" ng-click = "makeAdmin($index)">
               Zum Administrator machen
             </ion-option-button>
-            <ion-option-button class="button-assertive" ng-click="delete(group._id)">
+            <ion-option-button class="button-assertive">
             Mitglied entfernen
             </ion-option-button>
             </ion-item>
@@ -20,5 +20,8 @@
         <button class="button button-full button-assertive">Gruppe löschen</button>
         <a style="" class="button  button-icon button-small icon ion-android-arrow-back" href="#app/groups" menu-close=""></a>
         <ion-list style=""></ion-list>
+        <div class="card" ng-show="error.state">
+            <div class="item item-text-wrap">{{error.message}}</div>
+        </div>
     </ion-content>
 </ion-view>

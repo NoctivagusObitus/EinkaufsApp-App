@@ -103,12 +103,30 @@ angular.module('einkaufsapp.controllers', [])
   init();
 
     $scope.delete = function(id){
-      Group.deleteGroup(id).success(function(res){
-        init();
-        //tbd Error handling
+    //added Permissioncheck
+    var admin; 
+    User.getUserByName(localStorage.getItem('username')).success(function(res){
+    Group.getGroups(id).success(function(res1) {
+    for(var i = 0; i < res1.users.length;i++){
+               if(res[0]._id == res1.users[i].user_id._id){
+                    admin = res1.users[i].permission;
+               }
+                  
+           }
+           
+           //Wenn Admin dann 
+           if(admin = 2){
+            Group.deleteGroup(id).success(function(res){
+            init();
+            //tbd Error handling
+            });   
+           }
+            //Else sollte eine Fehlermeldung ausggeben werden 
+            
       });
+       });
     }
-
+                                    
 //Show Add View
   $scope.showAddModal = function() {
     $state.go('app.group-add')
@@ -159,7 +177,7 @@ angular.module('einkaufsapp.controllers', [])
 
 .controller('GroupDetailCtrl', function($scope, User,  $stateParams, Group){
   $scope.users = [];
-
+  $scope.group = [];
   var init = function() {
     Group.getUsersByGroup($stateParams.id).success(function(res){
       for(var i = 0; i < res.users.length; i++){
@@ -174,13 +192,40 @@ angular.module('einkaufsapp.controllers', [])
         }
         $scope.users.push({username: res.users[i].user_id.username, permission: permissionString});
       }
-      console.log(res);
-
+      
+      $scope.group.name = res.name;
     });
   }
-
+  
   init();
-
+  
+  $scope.makeAdmin = function(index) {
+        var admin;
+           var groupa;
+      //check permission
+      User.getUserByName(localStorage.getItem('username')).success(function(res){
+           Group.getUsersByGroup($stateParams.id).success(function(res1) {
+           for(var i = 0; i < res1.users.length;i++){
+               if(res[0]._id == res1.users[i].user_id._id){
+                    admin = res1.users[i].permission;
+               }
+                  
+           }
+           
+           //Wenn Admin dann 
+           if(admin = 2){
+           groupa = res1;
+           groupa.users[index].permission = 2;
+           Group.editGroup(groupa).success(function(res3){
+           console.log(res3);
+          });}
+            //Else sollte eine Fehlermeldung ausggeben werden 
+            
+      });
+       });
+      
+  }
+    
   $scope.showDelete = function (){
     if($scope.enabledelete == true)
       $scope.enabledelete = false;
