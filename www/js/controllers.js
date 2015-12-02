@@ -77,13 +77,17 @@ angular.module('einkaufsapp.controllers', [])
 
 .controller('RegisterCtrl', function($state, $sanitize, $scope, Register) {
   $scope.registerData = {};
+  $scope.error = {};
   $scope.register = function() {
     Register.save($scope.registerData, function(response) {
       if (response.status == "ok") {
         $state.go('app.home');
         localStorage.setItem('username', $scope.registerData.username);
         localStorage.setItem('password', $scope.registerData.password);
-      } else alert(response.message);
+      } else {
+        $scope.error.state = true;
+        $scope.error.message = response.message;
+      }
     });
   }
 })
@@ -181,10 +185,14 @@ angular.module('einkaufsapp.controllers', [])
   };
 })
 
-.controller('GroupDetailCtrl', function($scope, User, $stateParams, Group) {
+.controller('GroupDetailCtrl', function($scope, User, $stateParams, Group,$state, $sanitize) {
   $scope.users = [];
   $scope.group = [];
+  $scope.error =[];
+  $scope.grouphtml = [];
+  $scope.groupadd = []
   var init = function() {
+      $scope.groupadd.state = true;
     Group.getUsersByGroup($stateParams.id).success(function(res) {
       for (var i = 0; i < res.users.length; i++) {
         var permissionString;
@@ -207,54 +215,131 @@ angular.module('einkaufsapp.controllers', [])
   }
 
   init();
+  $scope.deleteMember = function(index){
+      //Permissioncheck
+      var admin;
+      User.getUserByName(localStorage.getItem('username')).success(function(res) {
+      Group.getGroups($stateParams.id).success(function(res1) {
+          for (var i = 0; i < res1.users.length; i++) {
+          if (res[0]._id == res1.users[i].user_id) {
+            admin = res1.users[i].permission;
+          }
 
+        }
+        //Wenn Admin dann
+      if (admin == 2) {
+      if(res1.users[index].user_id != res[0]._id ){ //man kann sich nicht selbst löschen !
+      Group.getGroups($stateParams.id).success(function(groupressource){
+      var groupnew;
+      var usersnew=[];
+      groupnew = groupressource;
+      for(var i = 0; i < groupressource.users.length; i++){
+          if(i==index){
+          }
+          else{
+         usersnew.push({
+          '_id' : groupressource.users[i]._id,
+          'user_id': groupressource.users[i].user_id,
+          'permission': groupressource.users[i].permission });
+          }
+      }
+      groupnew.users = usersnew;
+      Group.editGroup(groupnew).success(function(groupress2){
+          $state.go($state.current, {}, {reload: true}); //reload
+      });
+
+      });
+        }}
+        //Else Fehlermeldung
+        else{
+        $scope.error.state = true;
+        $scope.error.message = "Sie benötigen Administratorrechte um diese Aktion durchzuführen.";}
+      });
+    });
+  }
   $scope.makeAdmin = function(index) {
     var admin;
     var groupa;
     var permission;
     //check permission
     Group.getUsersByGroup($stateParams.id).success(function(group){
-      console.log(group);
       for(var i = 0; i < group.users.length; i++){
         if(localStorage.getItem('username') == group.users[i].user_id.username)
           permission = group.users[i].permission;
-          console.log(permission);
       }
 
       if (permission == 2){
         group.users[index].permission = 2;
-        console.log(group);
         Group.editGroup(group).success(function(res){
-          console.log(res);
+          $state.go($state.current, {}, {reload: true});
         })
       }
+      else{
+        $scope.error.state = true;
+        $scope.error.message = "Sie benötigen Administratorrechte um diese Aktion durchzuführen.";}
 
     });
 
-    /*
-    User.getUserByName(localStorage.getItem('username')).success(function(res) {
-      Group.getUsersByGroup($stateParams.id).success(function(res1) {
-        console.log(res1);
-        for (var i = 0; i < res1.users.length; i++) {
-          if (res[0]._id == res1.users[i].user_id._id) {
+  }
+
+  $scope.deleteGroup=function(){
+          //added Permissioncheck
+        var admin;
+        User.getUserByName(localStorage.getItem('username')).success(function(res) {
+        Group.getGroups($stateParams.id).success(function(res1) {
+          for (var i = 0; i < res1.users.length; i++) {
+          if (res[0]._id == res1.users[i].user_id) {
             admin = res1.users[i].permission;
           }
 
         }
-*/
         //Wenn Admin dann
-  /*      if (admin = 2) {
-          groupa = res1;
-          groupa.users[index].permission = 2;
-          Group.editGroup(groupa).success(function(res3) {
-            console.log(res3);
+        if (admin == 2) {
+          Group.deleteGroup($stateParams.id).success(function(res) {
+            $state.go('app.groups');
           });
-        }*/
-        //Else sollte eine Fehlermeldung ausggeben werden
+        }
+        //Else Fehlermeldung
+        else{
+        $scope.error.state = true;
+        $scope.error.message = "Sie benötigen Administratorrechte um diese Aktion durchzuführen.";}
+      });
+    });
 
-      //});
-    //});
 
+  }
+
+  $scope.changeGroupname = function(){
+      $scope.grouphtml.state = true; // Inputelement und Commit Button zeigen
+      $scope.groupadd.state = false; //button Gruppe hinzufügen ausblenden
+
+  }
+  $scope.changeGroupname_1 = function(){
+        var admin;
+        User.getUserByName(localStorage.getItem('username')).success(function(res) {
+        Group.getGroups($stateParams.id).success(function(res1) {
+          for (var i = 0; i < res1.users.length; i++) {
+          if (res[0]._id == res1.users[i].user_id) {
+            admin = res1.users[i].permission;
+          }
+
+        }
+        //Wenn Admin dann
+        if (admin == 2) {
+          res1.name = $scope.grouphtml.input;
+           Group.editGroup(res1).success(function(res){
+          $state.go($state.current, {}, {reload: true});
+          });
+        }
+        //Else Fehlermeldung
+        else{
+        $scope.error.state = true;
+        $scope.error.message = "Sie benötigen Administratorrechte um diese Aktion durchzuführen.";
+        $scope.grouphtml.state = false; // Inputelement und Commit Button verstecken
+        $scope.groupadd.state = true; //button Gruppe hinzufügen einblenden
+        }
+      });
+    });
   }
 
   $scope.showDelete = function() {
@@ -296,7 +381,7 @@ angular.module('einkaufsapp.controllers', [])
 
 .controller('HomeCtrl', function($scope, User) {})
 
-.controller('PurchaseCtrl', function($scope, Purchases, User) {
+.controller('PurchasesCtrl', function($scope, Purchases, User) {
   var init = function() {
     User.getUserByName(localStorage.getItem('username')).success(function(user) {
       Purchases.getPurchasesByOwner(user[0].id).success(function(purchases) {
@@ -308,8 +393,99 @@ angular.module('einkaufsapp.controllers', [])
   init();
 })
 
-.controller('MarketCtrl', function($scope, Purchases, Stores) {
+.controller('PurchaseCtrl', function($scope, Purchases, ProductService, $cordovaBarcodeScanner, $ionicModal) {
+  $ionicModal.fromTemplateUrl('templates/modals/product-add.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
   var init = function() {
+    if (!ProductService.products)
+      ProductService.products = [];
+    $scope.products = ProductService.products;
+    $scope.product = [];
+  }
 
+  init();
+
+  $scope.scan = function() {
+    $cordovaBarcodeScanner.scan().then(function(imageData) {
+      console.log(imageData.text);
+      scope.product.ean = imageData.text;
+      showModal();
+    }, function(error) {});
+  }
+
+  showModal = function() {
+    $scope.modal.show();
+  }
+
+  $scope.finishProduct = function() {
+    ProductSerivce.products.push($scope.product);
+  }
+
+})
+
+.controller('MarketCtrl', function($scope, Purchases, Stores, $state, MarketService) {
+  var init = function() {
+    Stores.getStore().success(function(stores) {
+      $scope.stores = stores;
+    });
+    $scope.data = [];
+  }
+
+  $scope.createMarket = function() {
+    $state.go('app.market-add');
+  }
+
+  $scope.chooseMarket = function() {
+    MarketService.market = $scope.data.selectedStore;
+    console.log(MarketService.market);
+    $state.go('app.purchases');
+  }
+
+  init();
+})
+
+.controller('MarketAddCtrl', function($state, $scope, Stores, $cordovaGeolocation) {
+  var init = function() {
+    $scope.gps = [];
+    $scope.market = [];
+    $scope.gpslocation = false;
+  }
+
+  init();
+
+  $scope.createMarket = function() {
+    var market = [];
+    market.push({
+      name: $scope.market.name,
+      gps: {
+        ln: 0,
+        lat: 0
+      },
+      country: $scope.market.country,
+      zip: $scope.market.zip,
+      street: $scope.market.street,
+      street_num: $scope.market.street_num
+    });
+    console.log(market);
+    Stores.addStore(market[0]).success(function(res) {
+      console.log(res);
+    });
+  }
+
+
+  $scope.getLocation = function() {
+    $cordovaGeolocation.getCurrentPosition(function(position) {
+      console.log(position);
+      alert(position);
+      $scope.gps.lng = position.coords.longitude;
+      $scope.gps.lat = position.coords.longitude;
+      $scope.gpslocation = true;
+    }, function(error) {
+      alert("can't get location.. sorry");
+    });
   }
 });

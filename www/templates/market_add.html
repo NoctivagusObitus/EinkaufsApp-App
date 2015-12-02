@@ -1,0 +1,47 @@
+<ion-view style="" title="Markt erstellen">
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content class="has-header" padding="'true'">
+    <form style="" class="list" ng-submit="createMarket()">
+      <ion-list style="">
+        <label style="" class="item item-input">
+          <span class="input-label">Marktname</span>
+          <input placeholder="" type="text" ng-model="market.name">
+        </label>
+      </ion-list>
+                <button class="button button-positive button-block" ng-click="getLocation()">aktuelle Position bestimmen</button>
+      <ion-list>
+        <ion-item>Longitude {{gps.lng}}</ion-item>
+        <ion-item>Latitude {{gps.lat}}</ion-item>
+      </ion-list>
+      <p>
+        <center>oder manuell eingeben</center>
+      </p>
+      <ion-list>
+        <label style="" class="item item-input">
+          <span class="input-label">Land</span>
+          <input placeholder="" type="text" ng-model="market.country">
+        </label>
+        <label style="" class="item item-input">
+          <span class="input-label">ZIP</span>
+          <input placeholder="" type="number" ng-model="market.zip">
+        </label>
+        <label style="" class="item item-input">
+          <span class="input-label">Straße</span>
+          <input placeholder="" type="text" ng-model="market.street">
+        </label>
+        <label style="" class="item item-input">
+          <span class="input-label">Hausnummer</span>
+          <input placeholder="" type="text" ng-model="market.street_num">
+        </label>
+      </ion-list>
+      <div style="height: 40px;" class="spacer"></div>
+      <button class="button button-stable button-block" type="submit">Markt erstellen</button>
+    </form>
+    <div class="card" ng-show="error.state">
+      <div class="item item-text-wrap">{{error.message}}</div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,25 @@
+<!-- View is outdated. Will be removed in near future! see /templates/group_add.html for new Group Add View-->
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Neues Produkt</h1>
+    <button class="button button-clear button-positive" ng-click="closeAddModal()">Abbrechen</button>
+  </ion-header-bar>
+  <ion-content>
+    <ion-list>
+      <label class="item item-input">
+        <input type="text" placeholder="EAN" ng-model="product.ean">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Produktname" ng-model="product.productname">
+      </label>
+      <label class="item item-input">
+        <input type="text" placeholder="Preis" ng-model="product.price">
+      </label>
+      <label class="item item-input">
+        <input type="number" placeholder="Menge" ng-model="product.amount">
+      </label>
+      <button class="button button-positive" ng-click="finishProduct()">Erstellen</button>
+    </ion-list>
+
+  </ion-content>
+</ion-modal-view>
