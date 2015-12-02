@@ -38,8 +38,9 @@ module.factory("Group", function ($http) {
         return $http.get(resturl + url + '/groupusers/' + id);
     };
 
+//tbd: delete either getUsersByGroup or getRichGroup in future releases
     Group.getRichGroup = function(id){
-        return $http.get(resturl + url + '/rich/' + id);
+        return $http.get(resturl + url + '/groupusers/' + id);
     };
     Group.getGroups = function (id) {
         return $http.get(resturl + url + '/' + id);
@@ -50,7 +51,7 @@ module.factory("Group", function ($http) {
     };
 
     Group.editGroup = function (group) {
-        return $http.post(resturl + url + '/edit/' + group._id, group);
+        return $http.post(resturl + url + '/edit', group);
     };
 
     Group.deleteGroup = function (id) {
