@@ -68,7 +68,8 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova', 'einkaufsapp.controllers', 
         url: '/purchases_match',
         views: {
             'menuContent': {
-                templateUrl: 'templates/purchases_match.html'
+                templateUrl: 'templates/purchases_match.html',
+                controller: 'MatchCtrl'
             }
         }
     })

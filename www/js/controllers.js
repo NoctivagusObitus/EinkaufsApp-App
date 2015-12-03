@@ -401,6 +401,7 @@ angular.module('einkaufsapp.controllers', [])
     $scope.modal = modal;
   });
   var init = function() {
+    console.log(ProductService.products);
     if (!ProductService.products)
       ProductService.products = [];
     $scope.products = ProductService.products;
@@ -412,7 +413,7 @@ angular.module('einkaufsapp.controllers', [])
   $scope.scan = function() {
     $cordovaBarcodeScanner.scan().then(function(imageData) {
       console.log(imageData.text);
-      scope.product.ean = imageData.text;
+      $scope.product.ean = imageData.text;
       showModal();
     }, function(error) {});
   }
@@ -421,11 +422,33 @@ angular.module('einkaufsapp.controllers', [])
     $scope.modal.show();
   }
 
+  $scope.closeModal = function(){
+    $scope.modal.hide();
+  }
+
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
   $scope.finishProduct = function() {
-    ProductSerivce.products.push($scope.product);
+    //if (!ProductService.products)
+      //ProductService.products = [];
+    ProductService.products.push($scope.product);}
+})
+
+.controller('MatchCtrl', function($scope, Purchases){
+  var init = function(){
+
+  }
+  init();
+
+  $scope.finalize = function(){
+      //$scope.
   }
 
 })
+
+
 
 .controller('MarketCtrl', function($scope, Purchases, Stores, $state, MarketService) {
   var init = function() {

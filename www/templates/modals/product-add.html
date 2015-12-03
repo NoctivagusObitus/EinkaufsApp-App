@@ -2,24 +2,53 @@
 <ion-modal-view>
   <ion-header-bar>
     <h1 class="title">Neues Produkt</h1>
-    <button class="button button-clear button-positive" ng-click="closeAddModal()">Abbrechen</button>
+    <button class="button button-clear button-positive" ng-click="closeModal()">Abbrechen</button>
   </ion-header-bar>
   <ion-content>
     <ion-list>
+      <label class="item item-toggle">
+        Sonderangebot
+        <label class="toggle toggle-positive">
+          <input type="checkbox" ng-model="toggle">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </label>
       <label class="item item-input">
+        <span class="input-label">EAN:</span>
         <input type="text" placeholder="EAN" ng-model="product.ean">
       </label>
       <label class="item item-input">
-        <input type="text" placeholder="Produktname" ng-model="product.productname">
+        <span class="input-label">Produkt:</span>
+        <input type="text" placeholder="Produktname" ng-model="product.name">
       </label>
       <label class="item item-input">
+        <span class="input-label">Menge:</span>
+        <input type="number" placeholder="number" ng-model="product.amount">
+      </label>
+      <label class="item item-input" ng-hide="toggle">
+        <span class="input-label">Einzelpreis:</span>
         <input type="text" placeholder="Preis" ng-model="product.price">
       </label>
-      <label class="item item-input">
-        <input type="number" placeholder="Menge" ng-model="product.amount">
-      </label>
-      <button class="button button-positive" ng-click="finishProduct()">Erstellen</button>
+      <div ng-show="toggle">
+        <div class="item item-divider">
+          Angebot
+        </div>
+        <label class="item item-input">
+          <span class="input-label">Angebotsbeginn</span>
+          <input type="date" placeholder="Menge" ng-model="product.offer.start_date">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Angebotsende</span>
+          <input type="date" placeholder="Menge" ng-model="product.offer.end_date">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Sonderpreis</span>
+          <input type="text" placeholder="Menge" ng-model="product.offer.price">
+        </label>
+      </div>
     </ion-list>
-
+    <button class="button button-full button-positive" ng-click="finishProduct()">Speichern</button>
   </ion-content>
 </ion-modal-view>
