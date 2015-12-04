@@ -1,4 +1,4 @@
-<ion-view style="" title="Einkaufen">
+<ion-view style="" title="Einkaufen" cache-view="false">
   <ion-content class="has-header" padding="'true'">
     <h3 style="">Markt 1 (Auswahl)</h3>
     <div style="" class="list card">
@@ -9,7 +9,7 @@
       <div class="item item-body">
         <ion-list style="">
           <ion-list style="">
-            <ion-item ng-repeat="product in products">
+            <ion-item ng-repeat="product in products track by $index">
               {{product.amount}} x {{product.name}}
               <span class="item-note">
                  {{product.price}} €

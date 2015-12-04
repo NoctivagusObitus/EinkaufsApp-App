@@ -431,19 +431,63 @@ angular.module('einkaufsapp.controllers', [])
   });
 
   $scope.finishProduct = function() {
-    //if (!ProductService.products)
-      //ProductService.products = [];
-    ProductService.products.push($scope.product);}
+    ProductService.products.push($scope.product);
+    $scope.product = {};
+  }
 })
 
-.controller('MatchCtrl', function($scope, Purchases){
-  var init = function(){
-
-  }
+.controller('MatchCtrl', function($scope, User, Group, Purchases, $state, ProductService, MarketService){
+    var init = function() {
+      User.getUserByName(localStorage.getItem('username')).success(function(usera) {
+        creatoruser = usera;
+        $scope.user = usera;
+        Group.getGroupsForUser(creatoruser[0]._id).success(function(groups) {
+          $scope.groups = groups;
+        });
+      });
+    }
   init();
 
   $scope.finalize = function(){
-      //$scope.
+    var date = Date.now();
+    var purchase = {};
+    purchase.cart = [];
+    var products = ProductService.products;
+    for (var i = 0; i < products.length; i++){
+      //1. Check if Article is in DB
+      if(products[i]._id == "0"){
+        Article.addArticle({name: products[i].name, ean: products[i].ean }).success(function(article){
+          products[i]._id = article[0]._id;
+        });
+      } else {
+        //Recieve article from db, compare to one entered. If different then:
+        //tbd: show alert that changes made will override the entity in the db.
+      }
+
+      //2. Check if ArticleStore is in DB
+      if(products[i].articlecostsid == "0"){
+        //get costs array
+        var costs = { price: products[i].price, currency: { name: "Euro" }, date: date};
+        //if choosen get offer array
+        if(products[i].toggle)
+          var offer = {start_date: products[i].start_date, end_date: products[i].end_date, price: products[i].offerprice};
+        ArticleCosts.addEntity({article_id: products[i]._id, store_id: MarketService.market, costs: costs, offer: offer}).success(function(entity){
+          products[i].articlecostsid = entity[0]._id;
+        });
+      } else {
+        //Recieve article from db, compare to one entered. If different then:
+        //tbd: show alert that changes made will override the entity in the db.
+      }
+      //3. Prepare the Purchase Object
+      purchase.cart.push({amount: products[i].amount, article_costs_id: products[i].articlecostsid, benefitial_id: products[i].benefitial});
+    }
+    //final step - lets fill the purchase object with the rest that is needed
+    purchase.date = date;
+    purchase.owner_id =
+
+    //Clear stuff up.
+    ProductService.products = [];
+    $state.go('app.purchases_overview');
   }
 
 })

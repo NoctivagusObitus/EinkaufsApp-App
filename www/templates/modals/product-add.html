@@ -9,7 +9,7 @@
       <label class="item item-toggle">
         Sonderangebot
         <label class="toggle toggle-positive">
-          <input type="checkbox" ng-model="toggle">
+          <input type="checkbox" ng-model="product.toggle">
           <div class="track">
             <div class="handle"></div>
           </div>
@@ -29,23 +29,23 @@
       </label>
       <label class="item item-input" ng-hide="toggle">
         <span class="input-label">Einzelpreis:</span>
-        <input type="text" placeholder="Preis" ng-model="product.price">
+        <input type="number" placeholder="Preis" ng-model="product.offerprice">
       </label>
-      <div ng-show="toggle">
+      <div ng-show="product.toggle">
         <div class="item item-divider">
           Angebot
         </div>
         <label class="item item-input">
           <span class="input-label">Angebotsbeginn</span>
-          <input type="date" placeholder="Menge" ng-model="product.offer.start_date">
+          <input type="date" placeholder="Datum" ng-model="product.start_date">
         </label>
         <label class="item item-input">
           <span class="input-label">Angebotsende</span>
-          <input type="date" placeholder="Menge" ng-model="product.offer.end_date">
+          <input type="date" placeholder="Datum" ng-model="product.end_date">
         </label>
         <label class="item item-input">
           <span class="input-label">Sonderpreis</span>
-          <input type="text" placeholder="Menge" ng-model="product.offer.price">
+          <input type="number" placeholder="Preis" ng-model="product.offer.price">
         </label>
       </div>
     </ion-list>
