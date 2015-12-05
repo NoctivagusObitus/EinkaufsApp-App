@@ -414,6 +414,9 @@ angular.module('einkaufsapp.controllers', [])
     $cordovaBarcodeScanner.scan().then(function(imageData) {
       console.log(imageData.text);
       $scope.product.ean = imageData.text;
+      Articles.getArticleByEAN(imageData.text).success(function(article){
+        $scope.product.name = article[0].name;
+      });
       showModal();
     }, function(error) {});
   }
