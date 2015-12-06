@@ -1,5 +1,6 @@
 var resturl = "https://einkaufsapp-hftlswe.rhcloud.com/";
 //var resturl = "http://localhost:3000/"
+//var resturl = "http://192.168.2.18:3000/"
 
 var module = angular.module('einkaufsapp.factories', ['ngResource']);
 
@@ -95,6 +96,23 @@ module.factory("Articles", function ($http) {
     return Article;
 
 });
+
+module.factory("ArticleCosts", function($http){
+  var url = 'articlecosts';
+  var ArticleCosts = {};
+
+  ArticleCosts.getEntityByProduct = function(productid, storeid){
+    return $http.post(resturl + url + '/product/' + productid, {storeid: storeid});
+  }
+
+  ArticleCosts.addEntity = function(entity){
+    return $http.post(resturl + url + '/add', entity);
+  }
+
+  return ArticleCosts;
+});
+
+
 module.factory("Purchases", function ($http) {
     var url = 'purchase';
     var Purchase = {};
@@ -124,12 +142,8 @@ module.factory("Purchases", function ($http) {
         return $http.get(resturl + url + '/rich/' + id);
     };
 
-    Purchase.addPurchase = function (owner_id, store_id, cart) {
-        return $http.post(resturl + url + '/add', {
-            owner_id: owner_id,
-            store_id: store_id,
-            cart: cart
-        });
+    Purchase.addPurchase = function (purchase) {
+        return $http.post(resturl + url + '/add', purchase);
     };
 
     Purchase.editPurchase = function (id, owner_id, store_id, cart) {

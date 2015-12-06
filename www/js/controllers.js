@@ -393,7 +393,7 @@ angular.module('einkaufsapp.controllers', [])
   init();
 })
 
-.controller('PurchaseCtrl', function($scope, Purchases, ProductService, $cordovaBarcodeScanner, $ionicModal) {
+.controller('PurchaseCtrl', function($scope, Purchases, Articles, ProductService, $cordovaBarcodeScanner, $ionicModal) {
   $ionicModal.fromTemplateUrl('templates/modals/product-add.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -415,7 +415,16 @@ angular.module('einkaufsapp.controllers', [])
       console.log(imageData.text);
       $scope.product.ean = imageData.text;
       Articles.getArticleByEAN(imageData.text).success(function(article){
-        $scope.product.name = article[0].name;
+        console.log(article.length);
+        if(article[0]._id != "undefined"){
+          $scope.product.name = article[0].name;
+          $scope.product._id = article[0]._id;
+          ArticleCosts.getEntityByProduct(article[0]._id, MarketService.market).success(function(entity){
+            if(entity[0]._id != "undefined")
+            $scope.product.price = entity[0].costs.price;
+          });
+        }
+        else $scope.product._id = "0";
       });
       showModal();
     }, function(error) {});
@@ -441,9 +450,11 @@ angular.module('einkaufsapp.controllers', [])
 
 .controller('MatchCtrl', function($scope, User, Group, Purchases, $state, ProductService, MarketService){
     var init = function() {
+      $scope.data = [];
       User.getUserByName(localStorage.getItem('username')).success(function(usera) {
         creatoruser = usera;
-        $scope.user = usera;
+        $scope.user = [];
+        $scope.user = usera[0];
         Group.getGroupsForUser(creatoruser[0]._id).success(function(groups) {
           $scope.groups = groups;
         });
@@ -457,36 +468,24 @@ angular.module('einkaufsapp.controllers', [])
     purchase.cart = [];
     var products = ProductService.products;
     for (var i = 0; i < products.length; i++){
-      //1. Check if Article is in DB
-      if(products[i]._id == "0"){
-        Article.addArticle({name: products[i].name, ean: products[i].ean }).success(function(article){
-          products[i]._id = article[0]._id;
-        });
+      var costs = { price: products[i].price, currency: { name: "Euro" }, date: date};
+      var article = { ean: products[i].ean, name: products[i].name};
+      var articlecosts = {store_id: MarketService.market, article: article, costs: costs};
+      if(products[i].toggle){
+        var offer = {start_date: products[i].start_date, end_date: products[i].end_date, price: products[i].offerprice};
+        articlecosts.offer = offer;
+        purchase.cart.push({amount: products[i].amount, article_costs: articlecosts , benefitial_id: products[i].benefitial});
       } else {
-        //Recieve article from db, compare to one entered. If different then:
-        //tbd: show alert that changes made will override the entity in the db.
-      }
-
-      //2. Check if ArticleStore is in DB
-      if(products[i].articlecostsid == "0"){
-        //get costs array
-        var costs = { price: products[i].price, currency: { name: "Euro" }, date: date};
-        //if choosen get offer array
-        if(products[i].toggle)
-          var offer = {start_date: products[i].start_date, end_date: products[i].end_date, price: products[i].offerprice};
-        ArticleCosts.addEntity({article_id: products[i]._id, store_id: MarketService.market, costs: costs, offer: offer}).success(function(entity){
-          products[i].articlecostsid = entity[0]._id;
-        });
-      } else {
-        //Recieve article from db, compare to one entered. If different then:
-        //tbd: show alert that changes made will override the entity in the db.
-      }
-      //3. Prepare the Purchase Object
-      purchase.cart.push({amount: products[i].amount, article_costs_id: products[i].articlecostsid, benefitial_id: products[i].benefitial});
-    }
+        purchase.cart.push({amount: products[i].amount, article_costs: articlecosts , benefitial_id: products[i].benefitial});
+      }}
     //final step - lets fill the purchase object with the rest that is needed
     purchase.date = date;
-    purchase.owner_id =
+    purchase.owner_id = $scope.data.selectedGroup;
+    purchase.store_id = MarketService.market;
+    console.log(purchase);
+    Purchases.addPurchase(purchase).success(function(stuff){
+      console.log(stuff);
+    });
 
     //Clear stuff up.
     ProductService.products = [];
