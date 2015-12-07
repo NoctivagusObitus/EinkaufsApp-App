@@ -1,26 +1,20 @@
 <ion-view style="" title="Auswertungen">
     <ion-content class="has-header" padding="'true'">
-        <form style="" class="list">
-            <div style="" class="list card">
-                <div class="item item-body">
-                    <form style="" class="list">
-                        <label style="" class="item item-select">
-                            <span class="input-label">für mich / Gruppe</span>
-                            <select></select>
-                        </label>
-                    </form>
-                    <h4 style="">Ausgaben in den
-                        <br>letzten 30 Tagen:</h4>
-                    <h4 style="">Ausgaben in den
-                        <br>letzten 7 Tagen:</h4>
-                    <div style="width: 268px; height: 0px;" class="spacer"></div>
-                    <h2 style="">Ausgaben nach Kategorie in den letzen 30 Tagen</h2>
-                    <h4 style="">Nahrungsmittel</h4>
-                    <h4 style="">Getränke</h4>
-                    <h4 style="">Haushaltsartikel</h4>
-                    <h4 style="">Sonstwas</h4>
-                </div>
-            </div>
-        </form>
+    <div class="card">
+        <div class="item item-divider">
+            A line chart
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{showTooltips: false}"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="item item-divider">
+            A bar chart
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="bar" class="chart chart-bar" data="data" labels="labels" legend="true" series="series" options="{showTooltips: false}"></canvas>
+        </div>
+    </div>
     </ion-content>
 </ion-view>

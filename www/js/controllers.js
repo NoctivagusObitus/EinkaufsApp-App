@@ -1,4 +1,4 @@
-angular.module('einkaufsapp.controllers', [])
+angular.module('einkaufsapp.controllers', ['chart.js'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
   $scope.username = localStorage.getItem('username');
@@ -22,7 +22,7 @@ angular.module('einkaufsapp.controllers', [])
 
 
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {
-  var init = function() {
+    var init = function() {
     var username = localStorage.getItem('username');
     var password = localStorage.getItem('password');
     $scope.loginData = {
