@@ -10,6 +10,19 @@
                     <span class="input-label">E-Mail</span>
                     <input placeholder="example@gmail.de" type="email" ng-model="registerData.email">
                 </label>
+               
+                <div ng-hide = "passwordshow.state">
+                <label style="" class="item item-input">
+                    <span class="input-label">Passwort</span>
+                    <input placeholder="" type="password" ng-model="registerData.password">
+                </label>
+                <label style="" class="item item-input">
+                    <span class="input-label">Passwort wiederholen</span>
+                    <input placeholder="" type="password" ng-model="registerData.confirm">
+                </label>
+                </div>
+                
+                <div ng-show = "passwordshow.state">
                 <label style="" class="item item-input">
                     <span class="input-label">Passwort</span>
                     <input placeholder="" type="text" ng-model="registerData.password">
@@ -18,6 +31,12 @@
                     <span class="input-label">Passwort wiederholen</span>
                     <input placeholder="" type="text" ng-model="registerData.confirm">
                 </label>
+                </div>
+                
+                <ion-checkbox ng-model="Checkbox.value" ng-click="showPassword()">Passwort anzeigen</ion-checkbox>
+
+
+            
             </ion-list>
             <a style="" class="button button-stable button-block " type="submit" ng-click="register()">Sign up</a>
         </form>

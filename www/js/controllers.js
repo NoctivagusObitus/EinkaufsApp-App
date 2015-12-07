@@ -78,6 +78,25 @@ angular.module('einkaufsapp.controllers', [])
 .controller('RegisterCtrl', function($state, $sanitize, $scope, Register) {
   $scope.registerData = {};
   $scope.error = {};
+  $scope.passwordshow={};
+  $scope.Checkbox ={};
+  var init = function(){
+      console.log("Test");
+      $scope.passwordshow.state = false;
+       console.log($scope.passwordshow.state);
+  };
+  init();
+  $scope.showPassword = function(){
+      console.log($scope.Checkbox.value);
+      if ($scope.Checkbox.value){
+          $scope.passwordshow.state = true;
+          console.log("checked");
+      }
+      else{
+          $scope.passwordshow.state = false ;
+          console.log("unchecked");
+      }
+  }
   $scope.register = function() {
     Register.save($scope.registerData, function(response) {
       if (response.status == "ok") {
