@@ -134,7 +134,8 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova', 'einkaufsapp.controllers', 
         url: '/auswertung',
         views: {
             'menuContent': {
-                templateUrl: 'templates/auswertungen.html'
+                templateUrl: 'templates/auswertungen.html',
+                controller: 'AuswertungenCtrl'
             }
         }
     })

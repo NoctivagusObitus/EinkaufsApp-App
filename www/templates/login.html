@@ -10,10 +10,22 @@
                     <span class="input-label" >Username</span>
                     <input placeholder="" type="text" ng-model="loginData.username">
                 </label>
+                
+                <div ng-hide = "passwordshow.state">
                 <label style="" class="item item-input">
                     <span class="input-label" ng-model="loginData.password">Password</span>
                     <input placeholder="" type="password" ng-model="loginData.password">
                 </label>
+                </div>
+                <div ng-show = "passwordshow.state">
+                <label style="" class="item item-input">
+                    <span class="input-label" ng-model="loginData.password">Password</span>
+                    <input placeholder="" type="text" ng-model="loginData.password">
+                </label>
+                </div>
+              
+                <ion-checkbox ng-model="Checkbox.value" ng-click="showPassword()">Passwort anzeigen</ion-checkbox>
+            
             </ion-list>
             <div style="height: 40px;" class="spacer"></div>
             <button class="button button-stable button-block" type="submit">Log in</button>

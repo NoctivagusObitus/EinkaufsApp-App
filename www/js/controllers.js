@@ -9,6 +9,18 @@ angular.module('einkaufsapp.controllers', [])
   }
 })
 
+.controller('AuswertungenCtrl', function($scope) {
+ 
+    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.data = [
+        [65, 59, 80, 81, 56, 55, 40],
+        [28, 48, 40, 19, 86, 27, 90]
+    ];
+ 
+});
+
+
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {
   var init = function() {
     var username = localStorage.getItem('username');
@@ -46,6 +58,20 @@ angular.module('einkaufsapp.controllers', [])
       username: username,
       password: password
     };
+  $scope.passwordshow={};
+  $scope.Checkbox ={};
+  var init = function(){
+      $scope.passwordshow.state = false;
+  };
+  init();
+  $scope.showPassword = function(){
+      if ($scope.Checkbox.value){
+          $scope.passwordshow.state = true;
+      }
+      else{
+          $scope.passwordshow.state = false ;
+      }
+  }
     Login.save($scope.loginData, function(response) {
       if (response.status == "ok") {
         $state.go('app.home');
@@ -81,20 +107,15 @@ angular.module('einkaufsapp.controllers', [])
   $scope.passwordshow={};
   $scope.Checkbox ={};
   var init = function(){
-      console.log("Test");
       $scope.passwordshow.state = false;
-       console.log($scope.passwordshow.state);
   };
   init();
   $scope.showPassword = function(){
-      console.log($scope.Checkbox.value);
       if ($scope.Checkbox.value){
           $scope.passwordshow.state = true;
-          console.log("checked");
       }
       else{
           $scope.passwordshow.state = false ;
-          console.log("unchecked");
       }
   }
   $scope.register = function() {
