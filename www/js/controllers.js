@@ -18,7 +18,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         [28, 48, 40, 19, 86, 27, 90]
     ];
  
-});
+})
 
 
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {
