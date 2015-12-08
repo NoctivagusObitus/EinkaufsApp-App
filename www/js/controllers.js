@@ -9,17 +9,64 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
   }
 })
 
-.controller('AuswertungenCtrl', function($scope) {
+.controller('AuswertungenCtrl', function($scope, $ionicModal, $state) {
+ $scope.Auswahl = {};
+ $scope.Zeitraum = {};
+ $scope.error = {};
  
+ $scope.Auswerten = function(){
+  //Auswahl der Auswertung und Fehlerbehandlung  
+
+    if($scope.Auswahl == 'Kaufhäufigkeit'){
+        $state.go('app.purchase-quantity');
+    }
+    else if($scope.Auswahl == 'Ausgabenverlauf'){
+        $state.go('app.purchase-timeline');
+    }
+    else if($scope.Auswahl == 'Gruppenverlauf'){
+        $state.go('app.grouppurchase-timeline');
+    }
+    else{
+        $scope.error.state = true;
+        $scope.error.message = 'Bitte Auswertung auswählen';
+    } 
+ };
+})
+
+
+.controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state) {
+    
+    
+    
+})    
+    
+.controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state) {
+// Zum Testen der Charts
+
     $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
     $scope.series = ['Series A', 'Series B'];
     $scope.data = [
         [65, 59, 80, 81, 56, 55, 40],
         [28, 48, 40, 19, 86, 27, 90]
     ];
- 
+    
+
+
 })
 
+.controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $state) {
+// Zum Testen der Charts
+
+    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+    $scope.series = ['Series A', 'Series B'];
+    $scope.data = [
+        [65, 59, 80, 81, 56, 55, 40],
+        [28, 48, 40, 19, 86, 27, 90]
+    ];
+    
+
+
+})
 
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {
     var init = function() {

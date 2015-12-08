@@ -1,0 +1,38 @@
+<ion-view style="" title="Auswertungen">
+    <ion-content class="has-header" overflow-scroll="true" padding="'true'">
+        <div class="row">
+            <div class="col">
+            <span class="input-label" >Startdatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Startdatum" type="date">
+            </label></span>
+            </div>
+            <div class="col">
+            <span class="input-label" >Enddatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Enddatum" type="date">
+            </label></span>
+            </div>
+        </div>
+        <div style="" class="list card">
+            <div class="item item-divider">Kriterium auswählen</div>
+            <div class="item item-body">
+                <form style="" class="list">
+                    <label>
+                    <ion-radio input type="radio" style="" ng-model="$parent.Auswahl" ng-value="'Kaufhäufigkeit'">Kaufhäufigkeit</ion-radio>
+                    </label>
+                    <label>
+                    <ion-radio input type="radio" style="" ng-model="$parent.Auswahl" ng-value="'Ausgabenverlauf'">Ausgabenverlauf</ion-radio>
+                    </label>
+                    <label>
+                    <ion-radio input type="radio" style="" ng-model="$parent.Auswahl" ng-value="'Gruppenverlauf'">Gruppenverlauf</ion-radio>
+                    </label>
+                </form>
+            </div>
+        </div>
+        <button style="" class="button button-balanced button-block  icon-right ion-android-arrow-forward" ng-click = "Auswerten()">Auswertung</button>
+        <div class="card" ng-show="error.state">
+      <div class="item item-text-wrap">{{error.message}}</div>
+    </div>
+    </ion-content>
+</ion-view>

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js', 'einkaufsapp.controllers', 'einkaufsapp.factories', 'einkaufsapp.services'])
+angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js','einkaufsapp.controllers', 'einkaufsapp.factories', 'einkaufsapp.services'])
 
 .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
@@ -134,8 +134,40 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js', 'einkaufsapp.con
         url: '/auswertung',
         views: {
             'menuContent': {
-                templateUrl: 'templates/auswertungen.html',
+                templateUrl: 'templates/auswertung_select.html',
                 controller: 'AuswertungenCtrl'
+            }
+        }
+    })
+    
+    .state('app.purchase-quantity', {
+        url: '/purchase-quantity',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/auswertung_kaufhaufigkeit.html',
+                controller : 'PurchaseQuantityCtrl'
+            }
+        }
+    })
+        
+    .state('app.purchase-timeline', {
+        url: '/purchase-timeline',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/ausgabenverlauf_chart.html',
+                controller : 'Purchase-TimelineCtrl'
+                
+            }
+        }
+    })
+    
+     .state('app.grouppurchase-timeline', {
+        url: '/grouppurchase-timeline',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/gruppenverlauf_chart.html',
+                controller: 'GroupPurchase-TimelineCtrl'
+                
             }
         }
     })
