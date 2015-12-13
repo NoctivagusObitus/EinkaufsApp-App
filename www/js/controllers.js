@@ -413,12 +413,20 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 .controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $stateParams, $state, User, Group) {
     var todayDate = new Date(), weekDate = new Date();
-    var Tagespreis;
-    
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
     $scope.Zeitraum = { 
         Startdatum: weekDate ,
         Enddatum : new Date ()
+    };
+    var chartDatenMaster= {
+        Daten : [],
+        label : []
+    };
+    $scope.chartData = {         //Scope Testdatenstruktur
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        data: [
+            [65, 59, 80, 81, 56, 55, 40],
+            [28, 48, 40, 19, 86, 27, 90]]
     };
     var testdaten = [
        [{ 
@@ -559,84 +567,112 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
          
    ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
     $scope.Auswerten = function(){
-       var series_master = [];
-       var label_master = [];
-       var label = [];
-       var Daten_Master= [];
-       var Daten = [];
-       var gefunden;
-       testdaten = sort_select(testdaten);
+       chartDatenMaster= {  //Master zurücksetzen
+        Daten : [],
+        label : [],
+        Series: []
+       };
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
        Group.getGroupsForUser(res[0]._id).success(function(groups) {
-       for(var a = 0; a<groups.length;a++){
-           console.log(a);
-           console.log("Group");
-           for(var i = 0; i < testdaten.length;i++ ){
-               console.log("Vergleich" + i );
-               if(groups[a]._id == testdaten[i][0].Owner_id && testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i]            [0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
-                   console.log("Datum pushen");
-                   console.log(testdaten[i][0].Date);
-                   label.push(testdaten[i][0].Date.getDate() +"." + (testdaten[i][0].Date.getMonth()+1) + "." + testdaten[i][0].Date.getFullYear());
-                   console.log(label);
-                   Tagespreis = 0; //Nullsetzen
-                   console.log("gruppenname pushen"+ " " + groups[a].name);
-                   gefunden = false ; //rücksetzen
-                   if(series_master.length == 0){ //Wenn seriesmaster leer
-                   
-                       series_master.push(groups[a].name);
-                       
-                   }else{
-                   for(var z = 0; z<series_master.length; z++){//series master pushen
-                       if(series_master[z] == groups[a].name){
-                       gefunden = true;  
-                          }; //if ende
-                   }; //for ende
-                   if(gefunden == false){
-                   series_master.push(groups[a].name);
-                   }; //Wenn nicht gefunden 
-                   };//else ende series master
-                   console.log(series_master);
-                   for(var j = 0; j< testdaten[i][0].Articles.length; j++){
-                       console.log(testdaten[i][0].Articles);
-                       Tagespreis = Math.round(100 *(Tagespreis + (testdaten[i][0].Articles[j].Price * testdaten[i][0].Articles[j].Amount)))/100;
-                       console.log("Gesamtpreis" + Tagespreis);
-                   }
-                   console.log(Tagespreis);
-                   Daten.push(Tagespreis);
-                   console.log(Daten);
-               };//if User = Owner Ende und in Time Scope
+       
+           for(var i = 0; i< groups.length; i++){
                
-           };//For Testdaten Ende
-           console.log("Daten Push und Label push");
-           console.log(Daten);
-           console.log(label);
-           Daten_Master.push(Daten);
-           label_master.push(label);
-       }; //For Groups.length Ende
-       console.log(Daten_Master);
-       console.log(label_master);
-       console.log(series_master);
-       $scope.chartData = {         //Scope Diagramm belegen
-       labels: label_master,
-       data: [Daten_Master],
-       series: series_master};
+               for(var j = 0; j< testdaten.length; j++){
+                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
+                       var label_vorhanden = false;
+                       var temp = testdaten[j][0].Date;
+                       for(var k=0;k< chartDatenMaster.label.length;k++){ //Label belegen
+                           if(temp ==chartDatenMaster.label[k]){
+                               label_vorhanden = true;
+                           };
+                       };//for K Ende 
+                       if(label_vorhanden ==false){
+                           chartDatenMaster.label[chartDatenMaster.label.length] = testdaten[j][0].Date;
+                       };
+                   };//If in timescope und Group is Owner of Einkauf
+               };//Ende For Testdaten length
+           };//For Groups length ende   
+       chartDatenMaster= sort_select(chartDatenMaster);    //Labels sortieren
+          
+       //Datenpunkte ermitteln
+       for(var i = 0; i< groups.length; i++){
+               for(var j = 0; j< testdaten.length; j++){
+                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){ 
+                   var series_vorhanden = false;
+                   var daten_leer_temp = [];
+                   var datenpunkt_temp = 0;
+                   //Series ermitteln und sicherstellen das nur einmal geschrieben wird
+                   for(var k=0;k< chartDatenMaster.Series.length;k++){ //Label belegen
+                   if(groups[i].name == chartDatenMaster.Series[k]){
+                             
+                       series_vorhanden = true;
+                       
+                   };
+                       };//for K Ende 
+                   if(series_vorhanden ==false){
+                           //Neues Datenelement erzeugen und mit 0 belegen
+                           for(var x = 0; x < chartDatenMaster.label.length; x++){
+                               daten_leer_temp[x] = 0;
+                           };
+                           chartDatenMaster.Daten.push(daten_leer_temp);
+                           //Datenelement erzeugen Ende
+                           chartDatenMaster.Series[chartDatenMaster.Series.length] = groups[i].name;
+                           
+                   }; //Series belegen Ende
+                       
+                   //Datenpunkte belegen
+                   
+                   //datenpunkt_erzeugen       
+                   for(var y = 0; y < testdaten[j][0].Articles.length; y++){
+                       datenpunkt_temp = datenpunkt_temp +( testdaten[j][0].Articles[y].Amount * testdaten[j][0].Articles[y].Price ) ;
+                   };//Temp_Datenpunkt ende
+                   datenpunkt_temp = ( Math.round( datenpunkt_temp * 100 ) ) / 100; //Runden
+                   //Datenpunkt zuweisen an die richtige Stelle im Array
+                   for ( var z = 0 ; z < chartDatenMaster.label.length ; z++) {
+                       
+                       if(chartDatenMaster.label[z] == testdaten[j][0].Date ){ //Wenn Position gefunden
+                           
+                           chartDatenMaster.Daten[chartDatenMaster.Series.length - 1][z] = datenpunkt_temp;
+                       };
+                       
+                   };//Datenpunkt zuweisen Ende
+                   }; //if in scope und owner Ende
+               };//Testdaten.length Ende
+       };//Groups.length Ende 
+       for(var l = 0;l < chartDatenMaster.label.length; l++){//Labels umschreiben
+         
+       chartDatenMaster.label[l]= chartDatenMaster.label[l].getDate() +"." + (chartDatenMaster.label[l].getMonth()+1) + "." +                       chartDatenMaster.label[l].getFullYear();
            
+       };//Labels umschreiben
+    
+       
        });//GetGroups Ende
        });//User Get-Ende
       
-       
+
+    //Diagramm befüllen
+    $scope.chartData = {         
+        labels: chartDatenMaster.label,
+        data: chartDatenMaster.Daten,
+        series: chartDatenMaster.Series
+    };//Chartbelegung ende
     }; //Auswerten Ende
+    
+    
+    
+    
+    
     
     
     
     function sort_select (testdaten){
         var temp;
-        for(var i = 0; i < testdaten.length;i++ ){
-            for(var j= i+1; j < testdaten.length;j++){
-                if(testdaten[j][0].Date.getTime()< testdaten[i][0].Date.getTime()){  // Tausch
-                    temp = testdaten[i];
-                    testdaten[i] = testdaten[j];
-                    testdaten[j] = temp;
+        for(var i = 0; i < testdaten.label.length;i++ ){
+            for(var j= i+1; j < testdaten.label.length;j++){
+                if(testdaten.label[j].getTime()< testdaten.label[i].getTime()){  // Tausch
+                    temp = testdaten.label[i];
+                    testdaten.label[i] = testdaten.label[j];
+                    testdaten.label[j] = temp;
                 };
             };//innere Schleife Select Sort
            
