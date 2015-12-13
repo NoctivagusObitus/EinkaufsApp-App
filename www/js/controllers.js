@@ -422,12 +422,6 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         Daten : [],
         label : []
     };
-    $scope.chartData = {         //Scope Testdatenstruktur
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        data: [
-            [65, 59, 80, 81, 56, 55, 40],
-            [28, 48, 40, 19, 86, 27, 90]]
-    };
     var testdaten = [
        [{ 
            Einkauf_Name: 'Einkauf1',
