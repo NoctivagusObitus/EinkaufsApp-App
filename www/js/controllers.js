@@ -11,7 +11,6 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 .controller('AuswertungenCtrl', function($scope, $ionicModal, $state) {
  $scope.Auswahl = {};
- $scope.Zeitraum = {};
  $scope.error = {};
  
  $scope.Auswerten = function(){
@@ -34,38 +33,617 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 })
 
 
-.controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state) {
-    
-    
+.controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state, User) {
+    var todayDate = new Date(), weekDate = new Date();
+    weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
+    $scope.Zeitraum = { 
+        Startdatum: weekDate ,
+        Enddatum : new Date ()
+    };
+    var jetzt  = new Date().getTime();
+    var damals = jetzt - (30 * 24 * 3600);
+    $scope.User = {};
+    $scope.Articles = new Array();
+    $scope.Gesamtausgaben = 0 ;
+    $scope.AnzahlEinkaeufe = 0;
+    $scope.username = localStorage.getItem('username');
+    var testdaten = [
+       [{ 
+           Einkauf_Name: 'Einkauf1',
+           Einkauf_ID:'123',
+           Date: new Date(2015, 11, 09),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Butter',
+               Amount : 10,
+               Price: 0.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 1,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 2,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 1,
+               Price: 15.79
+           }
+           ]
+        }],
+       [{
+           Einkauf_Name: 'Einkauf2',
+           Einkauf_ID:'001',
+           Date: new Date(2015, 11, 10),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 1,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 20,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf3',
+           Einkauf_ID:'002',
+           Date: new Date(2015, 09, 10),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf4',
+           Einkauf_ID:'003',
+           Date: new Date(2015, 10, 10),
+           Owner_id : '566181a522eca772b6919a8d',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }]
+         
+   ]; 
+   var username = localStorage.getItem('username');
+   $scope.Auswerten = function (){
+       $scope.Gesamtausgaben = 0; //Alles 0 setzen
+       $scope.AnzahlEinkaeufe = 0 ;
+       var Articles2 = [];
+       $scope.Articles = new Array();
+       User.getUserByName(localStorage.getItem('username')).success(function(res) {
+       for(var i = 0; i < testdaten.length;i++ ){
+        var gefunden = false ;
+        if(res[0]._id == testdaten[i][0].Owner_id){   
+        if(testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()  <= $scope.Zeitraum.Enddatum.getTime()){
+         $scope.AnzahlEinkaeufe ++ ;
+         for(var j = 0; j<testdaten[i][0].Articles.length ; j++){
+            
+             $scope.Gesamtausgaben =(testdaten[i][0].Articles[j].Amount * testdaten[i][0].Articles[j].Price) + $scope.Gesamtausgaben;
+             if(Articles2.length <1 ) //erster Artikel wird immer gepusht
+                 {
+                     Articles2.push({
+                     Article: testdaten[i][0].Articles[j].Article,
+                     Amount: testdaten[i][0].Articles[j].Amount,
+                     Price : testdaten[i][0].Articles[j].Price,
+                     Price_Total : 0
+                     });
+                 }else {
+                     for(var k = 0; k< Articles2.length; k ++){           //Überprüfen ob Artikel bereits in Array
+                         if(Articles2[k].Article == testdaten[i][0].Articles[j].Article){   //Wenn vorhanden dann addieren
+                             Articles2[k].Price = ((Articles2[k].Price * Articles2[k].Amount)+(testdaten[i][0].Articles[j].Amount * testdaten[i]   [0].Articles[j].Price)) /  (Articles2[k].Amount + testdaten[i][0].Articles[j].Amount); //Preisdurchschnitt errechnen
+                             Articles2[k].Price = Math.round(100 * Articles2[k].Price)/100 //runden
+                             Articles2[k].Amount = Articles2[k].Amount + testdaten[i][0].Articles[j].Amount; //Anzahl zusammen addieren
+                             
+                             gefunden = true ;
+                             break; //Element gefunden break
+                         }
+                     }; // for k
+                     
+                     if(gefunden == false){
+                           Articles2.push({
+                           Article: testdaten[i][0].Articles[j].Article,
+                           Amount: testdaten[i][0].Articles[j].Amount,
+                           Price : testdaten[i][0].Articles[j].Price,
+                           Price_Total : 0
+                           });
+                     };
+                 };
+                 
+             
+             
+         };//Gesamtausgaben berechnen und Artikel in Articles pushen
+       
+       }; //if in Zeitraum
+       }; //if owner einkauf = userid
+       }; //testdaten.length Zählschleife
+       for(var l = 0; l< Articles2.length; l++){    //Gesamtpreis berechnen
+           Articles2[l].Price_Total = Articles2[l].Price * Articles2[l].Amount;
+       }
+       $scope.Gesamtausgaben = Math.round(100* $scope.Gesamtausgaben)/100; //runden
+       $scope.Articles = Articles2;
+       });//User get Ende
+   };
     
 })    
     
-.controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state) {
-// Zum Testen der Charts
-
-    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-    $scope.series = ['Series A', 'Series B'];
-    $scope.data = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-    ];
+.controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state, User) {
+    var todayDate = new Date(), weekDate = new Date();
+    var Tagespreis;
     
-
-
+    weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
+    $scope.Zeitraum = { 
+        Startdatum: weekDate ,
+        Enddatum : new Date ()
+    };
+    var testdaten = [
+       [{ 
+           Einkauf_Name: 'Einkauf1',
+           Einkauf_ID:'123',
+           Date: new Date(2015, 11, 09),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Butter',
+               Amount : 10,
+               Price: 0.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 1,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 2,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 1,
+               Price: 15.79
+           }
+           ]
+        }],
+        [{ 
+           Einkauf_Name: 'Einkauf1',
+           Einkauf_ID:'123',
+           Date: new Date(2015, 09, 09),
+           Owner_id : '566181a522eca772b6919a8d',
+           Articles: [{
+               Article: 'Butter',
+               Amount : 10,
+               Price: 0.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 1,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 2,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 1,
+               Price: 15.79
+           }
+           ]
+        }],
+       [{
+           Einkauf_Name: 'Einkauf2',
+           Einkauf_ID:'001',
+           Date: new Date(2015, 11, 10),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 1,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 20,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf3',
+           Einkauf_ID:'002',
+           Date: new Date(2015, 09, 10),
+           Owner_id : '564e2efd0462fbc12ad2c050',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf4',
+           Einkauf_ID:'003',
+           Date: new Date(2015, 10, 10),
+           Owner_id : '566181a522eca772b6919a8d',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }]
+         
+   ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
+    $scope.Auswerten = function(){
+       var label = [];
+       var Daten = [];
+       testdaten = sort_select(testdaten);
+       User.getUserByName(localStorage.getItem('username')).success(function(res) {
+           for(var i = 0; i < testdaten.length;i++ ){
+               if(res[0]._id == testdaten[i][0].Owner_id && testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()                     <= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
+                   
+                   label.push(testdaten[i][0].Date.getDate() +"." + (testdaten[i][0].Date.getMonth()+1) + "." + testdaten[i][0].Date.getFullYear());
+                   Tagespreis = 0; //Nullsetzen
+                   for(var j = 0; j< testdaten[i][0].Articles.length; j++){
+                       Tagespreis = Math.round(100 *(Tagespreis + (testdaten[i][0].Articles[j].Price * testdaten[i][0].Articles[j].Amount)))/100;
+                   }
+                   Daten.push(Tagespreis);
+               };//if User = Owner Ende
+            
+           };//For Testdaten Ende
+       $scope.chartData = {         //Scope Diagramm belegen
+       labels: label,
+       data: [Daten]    };
+       });//User Get-Ende
+      
+       
+    }; //Auswerten Ende
+    
+    
+    
+    function sort_select (testdaten){
+        var temp;
+        for(var i = 0; i < testdaten.length;i++ ){
+            for(var j= i+1; j < testdaten.length;j++){
+                if(testdaten[j][0].Date.getTime()< testdaten[i][0].Date.getTime()){  // Tausch
+                    temp = testdaten[i];
+                    testdaten[i] = testdaten[j];
+                    testdaten[j] = temp;
+                };
+            };//innere Schleife Select Sort
+           
+        };//For Testdaten.length ende
+        return testdaten;
+    }
+    
 })
 
-.controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $state) {
-// Zum Testen der Charts
-
-    $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-    $scope.series = ['Series A', 'Series B'];
-    $scope.data = [
-        [65, 59, 80, 81, 56, 55, 40],
-        [28, 48, 40, 19, 86, 27, 90]
-    ];
+.controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $stateParams, $state, User, Group) {
+    var todayDate = new Date(), weekDate = new Date();
+    var Tagespreis;
     
-
-
+    weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
+    $scope.Zeitraum = { 
+        Startdatum: weekDate ,
+        Enddatum : new Date ()
+    };
+    var testdaten = [
+       [{ 
+           Einkauf_Name: 'Einkauf1',
+           Einkauf_ID:'123',
+           Date: new Date(2015, 6, 09),
+           Owner_id : '5660c46822eca772b6919a87',
+           Articles: [{
+               Article: 'Butter',
+               Amount : 10,
+               Price: 0.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 1,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 2,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 1,
+               Price: 15.79
+           }
+           ]
+        }],
+        [{ 
+           Einkauf_Name: 'Einkauf1',
+           Einkauf_ID:'123',
+           Date: new Date(2015, 05, 09),
+           Owner_id : '5660c46822eca772b6919a87',
+           Articles: [{
+               Article: 'Butter',
+               Amount : 10,
+               Price: 0.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 1,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 2,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 1,
+               Price: 15.79
+           }
+           ]
+        }],
+       [{
+           Einkauf_Name: 'Einkauf2',
+           Einkauf_ID:'001',
+           Date: new Date(2015, 11, 10),
+           Owner_id : '5661841022eca772b6919a92',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 1,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 20,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf3',
+           Einkauf_ID:'002',
+           Date: new Date(2015, 09, 10),
+           Owner_id : '5661841022eca772b6919a92',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }],
+       [{
+           Einkauf_Name: 'Einkauf4',
+           Einkauf_ID:'003',
+           Date: new Date(2015, 08, 10),
+           Owner_id : '5660c46822eca772b6919a87',
+           Articles: [{
+               Article: 'Brot',
+               Amount : 40,
+               Price: 1.79
+           },
+           {
+               Article: 'Marmelade',
+               Amount : 4,
+               Price: 0.49
+           },
+           {
+               Article: 'Zigaretten',
+               Amount : 5,
+               Price: 5.49
+           },
+           {
+               Article: 'Kondome',
+               Amount : 100,
+               Price: 15.79
+           }
+           ]
+       }]
+         
+   ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
+    $scope.Auswerten = function(){
+       var series_master = [];
+       var label_master = [];
+       var label = [];
+       var Daten_Master= [];
+       var Daten = [];
+       var gefunden;
+       testdaten = sort_select(testdaten);
+       User.getUserByName(localStorage.getItem('username')).success(function(res) {
+       Group.getGroupsForUser(res[0]._id).success(function(groups) {
+       for(var a = 0; a<groups.length;a++){
+           console.log(a);
+           console.log("Group");
+           for(var i = 0; i < testdaten.length;i++ ){
+               console.log("Vergleich" + i );
+               if(groups[a]._id == testdaten[i][0].Owner_id && testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i]            [0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
+                   console.log("Datum pushen");
+                   console.log(testdaten[i][0].Date);
+                   label.push(testdaten[i][0].Date.getDate() +"." + (testdaten[i][0].Date.getMonth()+1) + "." + testdaten[i][0].Date.getFullYear());
+                   console.log(label);
+                   Tagespreis = 0; //Nullsetzen
+                   console.log("gruppenname pushen"+ " " + groups[a].name);
+                   gefunden = false ; //rücksetzen
+                   if(series_master.length == 0){ //Wenn seriesmaster leer
+                   
+                       series_master.push(groups[a].name);
+                       
+                   }else{
+                   for(var z = 0; z<series_master.length; z++){//series master pushen
+                       if(series_master[z] == groups[a].name){
+                       gefunden = true;  
+                          }; //if ende
+                   }; //for ende
+                   if(gefunden == false){
+                   series_master.push(groups[a].name);
+                   }; //Wenn nicht gefunden 
+                   };//else ende series master
+                   console.log(series_master);
+                   for(var j = 0; j< testdaten[i][0].Articles.length; j++){
+                       console.log(testdaten[i][0].Articles);
+                       Tagespreis = Math.round(100 *(Tagespreis + (testdaten[i][0].Articles[j].Price * testdaten[i][0].Articles[j].Amount)))/100;
+                       console.log("Gesamtpreis" + Tagespreis);
+                   }
+                   console.log(Tagespreis);
+                   Daten.push(Tagespreis);
+                   console.log(Daten);
+               };//if User = Owner Ende und in Time Scope
+               
+           };//For Testdaten Ende
+           console.log("Daten Push und Label push");
+           console.log(Daten);
+           console.log(label);
+           Daten_Master.push(Daten);
+           label_master.push(label);
+       }; //For Groups.length Ende
+       console.log(Daten_Master);
+       console.log(label_master);
+       console.log(series_master);
+       $scope.chartData = {         //Scope Diagramm belegen
+       labels: label_master,
+       data: [Daten_Master],
+       series: series_master};
+           
+       });//GetGroups Ende
+       });//User Get-Ende
+      
+       
+    }; //Auswerten Ende
+    
+    
+    
+    function sort_select (testdaten){
+        var temp;
+        for(var i = 0; i < testdaten.length;i++ ){
+            for(var j= i+1; j < testdaten.length;j++){
+                if(testdaten[j][0].Date.getTime()< testdaten[i][0].Date.getTime()){  // Tausch
+                    temp = testdaten[i];
+                    testdaten[i] = testdaten[j];
+                    testdaten[j] = temp;
+                };
+            };//innere Schleife Select Sort
+           
+        };//For Testdaten.length ende
+        return testdaten;
+    }
+   
 })
 
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {

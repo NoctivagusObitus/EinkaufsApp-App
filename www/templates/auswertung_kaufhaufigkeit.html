@@ -1,13 +1,45 @@
 <ion-view style="" title="Auswertung">
     <ion-content class="has-header" overflow-scroll="true" padding="'true'">
+         <div class="row">
+            <div class="col">
+            <span class="input-label" >Startdatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Startdatum" type="date">
+            </label></span>
+            </div>
+            <div class="col">
+            <span class="input-label" >Enddatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Enddatum" type="date">
+            </label></span>
+            </div>
+        </div>
+        <div class = "row">
+        <button style="" class="button button-positive" ng-click = "Auswerten()">Auswerten</button>
+        </div>
         <div style="" class="list card">
-            <div class="item item-divider">Member X</div>
+            <div class="item item-divider">Einkaufsübersicht von {{username}}</div>
             <div class="item item-body">
                 <ion-list style="">
-                    <ion-item style="" class="item-divider">Anzahl Einkäufe</ion-item>
-                    <ion-item style=""></ion-item>
-                    <ion-item style="" class="item-divider">Ausgaben</ion-item>
-                    <ion-item style=""></ion-item>
+                    <ion-item style="" class="item-divider">Anzahl aller Einkäufe :</ion-item>
+                    <ion-item style="">{{AnzahlEinkaeufe}}</ion-item>
+                    <ion-item style="" class="item-divider">Gesamtausgaben :</ion-item>
+                    <ion-item style="">{{Gesamtausgaben}} €</ion-item>
+                    <ion-item style="" class="item-divider">Am häufigsten gekauft :</ion-item>
+                    <div class="row">
+                    <div class = "col">Artielname</div>
+                    <div class = "col">Anzahl</div>
+                    <div class = "col">&#216 Preis</div>
+                    <div class = "col">Gesamtkosten</div>
+                    </div>
+                    <ion-item ng-repeat="Article in Articles | orderBy:'Amount':true |limitTo:5">
+                    <div class="row">
+                    <div class = "col">{{Article.Article}}</div>
+                    <div class = "col">{{Article.Amount}}</div>
+                    <div class = "col">{{Article.Price}} €</div>
+                    <div class = "col">{{Article.Price_Total}} €</div>
+                    </div>
+                    </ion-item>
                 </ion-list>
             </div>
         </div>

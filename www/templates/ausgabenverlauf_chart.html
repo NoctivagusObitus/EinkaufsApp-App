@@ -1,19 +1,28 @@
 <ion-view style="" title="Auswertungen">
     <ion-content class="has-header" padding="'true'">
+         <div class="row">
+            <div class="col">
+            <span class="input-label" >Startdatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Startdatum" type="date">
+            </label></span>
+            </div>
+            <div class="col">
+            <span class="input-label" >Enddatum :
+            <label style="" class="item item-input">
+                <input placeholder="Datum" ng-model = "Zeitraum.Enddatum" type="date">
+            </label></span>
+            </div>
+        </div>
+        <div class = "row">
+        <button style="" class="button button-positive" ng-click = "Auswerten()">Auswerten</button>
+        </div>
     <div class="card">
         <div class="item item-divider">
-            A line chart
+            Ausgabenverlauf je Tag
         </div>
         <div class="item item-text-wrap">
-            <canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{showTooltips: false}"></canvas>
-        </div>
-    </div>
-    <div class="card">
-        <div class="item item-divider">
-            A bar chart
-        </div>
-        <div class="item item-text-wrap">
-            <canvas id="bar" class="chart chart-bar" data="data" labels="labels" legend="true" series="series" options="{showTooltips: false}"></canvas>
+            <canvas id="line" class="chart chart-line" data="chartData.data" labels="chartData.labels" legend="true" series="chartData.series"></canvas>
         </div>
     </div>
     </ion-content>
