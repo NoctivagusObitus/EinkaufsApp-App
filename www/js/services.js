@@ -11,3 +11,7 @@ module.service('ProductService', function () {
 module.service('AssignmentService', function () {
     this.assigment;
 });
+
+module.service('PurchaseService', function () {
+  this.purchases;
+});

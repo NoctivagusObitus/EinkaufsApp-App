@@ -12,9 +12,9 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 .controller('AuswertungenCtrl', function($scope, $ionicModal, $state) {
  $scope.Auswahl = {};
  $scope.error = {};
- 
+
  $scope.Auswerten = function(){
-  //Auswahl der Auswertung und Fehlerbehandlung  
+  //Auswahl der Auswertung und Fehlerbehandlung
 
     if($scope.Auswahl == 'Kaufhäufigkeit'){
         $state.go('app.purchase-quantity');
@@ -28,7 +28,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
     else{
         $scope.error.state = true;
         $scope.error.message = 'Bitte Auswertung auswählen';
-    } 
+    }
  };
 })
 
@@ -36,7 +36,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 .controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state, User) {
     var todayDate = new Date(), weekDate = new Date();
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
-    $scope.Zeitraum = { 
+    $scope.Zeitraum = {
         Startdatum: weekDate ,
         Enddatum : new Date ()
     };
@@ -48,7 +48,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
     $scope.AnzahlEinkaeufe = 0;
     $scope.username = localStorage.getItem('username');
     var testdaten = [
-       [{ 
+       [{
            Einkauf_Name: 'Einkauf1',
            Einkauf_ID:'123',
            Date: new Date(2015, 11, 09),
@@ -156,8 +156,8 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            }
            ]
        }]
-         
-   ]; 
+
+   ];
    var username = localStorage.getItem('username');
    $scope.Auswerten = function (){
        $scope.Gesamtausgaben = 0; //Alles 0 setzen
@@ -167,11 +167,11 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
        for(var i = 0; i < testdaten.length;i++ ){
         var gefunden = false ;
-        if(res[0]._id == testdaten[i][0].Owner_id){   
+        if(res[0]._id == testdaten[i][0].Owner_id){
         if(testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()  <= $scope.Zeitraum.Enddatum.getTime()){
          $scope.AnzahlEinkaeufe ++ ;
          for(var j = 0; j<testdaten[i][0].Articles.length ; j++){
-            
+
              $scope.Gesamtausgaben =(testdaten[i][0].Articles[j].Amount * testdaten[i][0].Articles[j].Price) + $scope.Gesamtausgaben;
              if(Articles2.length <1 ) //erster Artikel wird immer gepusht
                  {
@@ -187,12 +187,12 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                              Articles2[k].Price = ((Articles2[k].Price * Articles2[k].Amount)+(testdaten[i][0].Articles[j].Amount * testdaten[i]   [0].Articles[j].Price)) /  (Articles2[k].Amount + testdaten[i][0].Articles[j].Amount); //Preisdurchschnitt errechnen
                              Articles2[k].Price = Math.round(100 * Articles2[k].Price)/100 //runden
                              Articles2[k].Amount = Articles2[k].Amount + testdaten[i][0].Articles[j].Amount; //Anzahl zusammen addieren
-                             
+
                              gefunden = true ;
                              break; //Element gefunden break
                          }
                      }; // for k
-                     
+
                      if(gefunden == false){
                            Articles2.push({
                            Article: testdaten[i][0].Articles[j].Article,
@@ -202,11 +202,11 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                            });
                      };
                  };
-                 
-             
-             
+
+
+
          };//Gesamtausgaben berechnen und Artikel in Articles pushen
-       
+
        }; //if in Zeitraum
        }; //if owner einkauf = userid
        }; //testdaten.length Zählschleife
@@ -217,20 +217,20 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        $scope.Articles = Articles2;
        });//User get Ende
    };
-    
-})    
-    
+
+})
+
 .controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state, User) {
     var todayDate = new Date(), weekDate = new Date();
     var Tagespreis;
-    
+
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
-    $scope.Zeitraum = { 
+    $scope.Zeitraum = {
         Startdatum: weekDate ,
         Enddatum : new Date ()
     };
     var testdaten = [
-       [{ 
+       [{
            Einkauf_Name: 'Einkauf1',
            Einkauf_ID:'123',
            Date: new Date(2015, 11, 09),
@@ -257,7 +257,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            }
            ]
         }],
-        [{ 
+        [{
            Einkauf_Name: 'Einkauf1',
            Einkauf_ID:'123',
            Date: new Date(2015, 09, 09),
@@ -365,7 +365,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            }
            ]
        }]
-         
+
    ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
     $scope.Auswerten = function(){
        var label = [];
@@ -374,7 +374,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
            for(var i = 0; i < testdaten.length;i++ ){
                if(res[0]._id == testdaten[i][0].Owner_id && testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()                     <= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
-                   
+
                    label.push(testdaten[i][0].Date.getDate() +"." + (testdaten[i][0].Date.getMonth()+1) + "." + testdaten[i][0].Date.getFullYear());
                    Tagespreis = 0; //Nullsetzen
                    for(var j = 0; j< testdaten[i][0].Articles.length; j++){
@@ -382,18 +382,18 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                    }
                    Daten.push(Tagespreis);
                };//if User = Owner Ende
-            
+
            };//For Testdaten Ende
        $scope.chartData = {         //Scope Diagramm belegen
        labels: label,
        data: [Daten]    };
        });//User Get-Ende
-      
-       
+
+
     }; //Auswerten Ende
-    
-    
-    
+
+
+
     function sort_select (testdaten){
         var temp;
         for(var i = 0; i < testdaten.length;i++ ){
@@ -404,17 +404,17 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                     testdaten[j] = temp;
                 };
             };//innere Schleife Select Sort
-           
+
         };//For Testdaten.length ende
         return testdaten;
     }
-    
+
 })
 
 .controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $stateParams, $state, User, Group) {
     var todayDate = new Date(), weekDate = new Date();
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
-    $scope.Zeitraum = { 
+    $scope.Zeitraum = {
         Startdatum: weekDate ,
         Enddatum : new Date ()
     };
@@ -423,7 +423,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         label : []
     };
     var testdaten = [
-       [{ 
+       [{
            Einkauf_Name: 'Einkauf1',
            Einkauf_ID:'123',
            Date: new Date(2015, 6, 09),
@@ -450,7 +450,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            }
            ]
         }],
-        [{ 
+        [{
            Einkauf_Name: 'Einkauf1',
            Einkauf_ID:'123',
            Date: new Date(2015, 05, 09),
@@ -558,7 +558,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            }
            ]
        }]
-         
+
    ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
     $scope.Auswerten = function(){
        chartDatenMaster= {  //Master zurücksetzen
@@ -568,9 +568,9 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        };
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
        Group.getGroupsForUser(res[0]._id).success(function(groups) {
-       
+
            for(var i = 0; i< groups.length; i++){
-               
+
                for(var j = 0; j< testdaten.length; j++){
                    if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
                        var label_vorhanden = false;
@@ -579,30 +579,30 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                            if(temp ==chartDatenMaster.label[k]){
                                label_vorhanden = true;
                            };
-                       };//for K Ende 
+                       };//for K Ende
                        if(label_vorhanden ==false){
                            chartDatenMaster.label[chartDatenMaster.label.length] = testdaten[j][0].Date;
                        };
                    };//If in timescope und Group is Owner of Einkauf
                };//Ende For Testdaten length
-           };//For Groups length ende   
+           };//For Groups length ende
        chartDatenMaster= sort_select(chartDatenMaster);    //Labels sortieren
-          
+
        //Datenpunkte ermitteln
        for(var i = 0; i< groups.length; i++){
                for(var j = 0; j< testdaten.length; j++){
-                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){ 
+                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
                    var series_vorhanden = false;
                    var daten_leer_temp = [];
                    var datenpunkt_temp = 0;
                    //Series ermitteln und sicherstellen das nur einmal geschrieben wird
                    for(var k=0;k< chartDatenMaster.Series.length;k++){ //Label belegen
                    if(groups[i].name == chartDatenMaster.Series[k]){
-                             
+
                        series_vorhanden = true;
-                       
+
                    };
-                       };//for K Ende 
+                       };//for K Ende
                    if(series_vorhanden ==false){
                            //Neues Datenelement erzeugen und mit 0 belegen
                            for(var x = 0; x < chartDatenMaster.label.length; x++){
@@ -611,54 +611,54 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                            chartDatenMaster.Daten.push(daten_leer_temp);
                            //Datenelement erzeugen Ende
                            chartDatenMaster.Series[chartDatenMaster.Series.length] = groups[i].name;
-                           
+
                    }; //Series belegen Ende
-                       
+
                    //Datenpunkte belegen
-                   
-                   //datenpunkt_erzeugen       
+
+                   //datenpunkt_erzeugen
                    for(var y = 0; y < testdaten[j][0].Articles.length; y++){
                        datenpunkt_temp = datenpunkt_temp +( testdaten[j][0].Articles[y].Amount * testdaten[j][0].Articles[y].Price ) ;
                    };//Temp_Datenpunkt ende
                    datenpunkt_temp = ( Math.round( datenpunkt_temp * 100 ) ) / 100; //Runden
                    //Datenpunkt zuweisen an die richtige Stelle im Array
                    for ( var z = 0 ; z < chartDatenMaster.label.length ; z++) {
-                       
+
                        if(chartDatenMaster.label[z] == testdaten[j][0].Date ){ //Wenn Position gefunden
-                           
+
                            chartDatenMaster.Daten[chartDatenMaster.Series.length - 1][z] = datenpunkt_temp;
                        };
-                       
+
                    };//Datenpunkt zuweisen Ende
                    }; //if in scope und owner Ende
                };//Testdaten.length Ende
-       };//Groups.length Ende 
+       };//Groups.length Ende
        for(var l = 0;l < chartDatenMaster.label.length; l++){//Labels umschreiben
-         
+
        chartDatenMaster.label[l]= chartDatenMaster.label[l].getDate() +"." + (chartDatenMaster.label[l].getMonth()+1) + "." +                       chartDatenMaster.label[l].getFullYear();
-           
+
        };//Labels umschreiben
-    
-       
+
+
        });//GetGroups Ende
        });//User Get-Ende
-      
+
 
     //Diagramm befüllen
-    $scope.chartData = {         
+    $scope.chartData = {
         labels: chartDatenMaster.label,
         data: chartDatenMaster.Daten,
         series: chartDatenMaster.Series
     };//Chartbelegung ende
     }; //Auswerten Ende
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     function sort_select (testdaten){
         var temp;
         for(var i = 0; i < testdaten.label.length;i++ ){
@@ -669,11 +669,11 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                     testdaten.label[j] = temp;
                 };
             };//innere Schleife Select Sort
-           
+
         };//For Testdaten.length ende
         return testdaten;
     }
-   
+
 })
 
 .controller('WelcomeCtrl', function($scope, $ionicModal, Login, $state) {
@@ -1076,13 +1076,18 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 .controller('HomeCtrl', function($scope, User) {})
 
-.controller('PurchasesCtrl', function($scope, Purchases, User) {
+.controller('PurchasesCtrl', function($scope, Purchases, User, PurchaseService) {
   var init = function() {
+    PurchaseService.purchases = PurchaseService.purchases || localStorage.getItem('purchases') || [];
+    $scope.purchases = PurchaseService.purchases;
+    console.log(PurchaseService.purchases);
+    /*
     User.getUserByName(localStorage.getItem('username')).success(function(user) {
       Purchases.getPurchasesByOwner(user[0].id).success(function(purchases) {
         $scope.purchases = purchases;
       });
     });
+    */
   }
 
   init();
@@ -1143,12 +1148,12 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
   }
 })
 
-.controller('MatchCtrl', function($scope, User, Group, Purchases, $state, ProductService, MarketService){
+.controller('MatchCtrl', function($scope, User, Group, Purchases, $state, ProductService, MarketService, PurchaseService    ){
     var init = function() {
       $scope.data = [];
       User.getUserByName(localStorage.getItem('username')).success(function(usera) {
         creatoruser = usera;
-        $scope.user = [];
+        $scope.user = {};
         $scope.user = usera[0];
         Group.getGroupsForUser(creatoruser[0]._id).success(function(groups) {
           $scope.groups = groups;
@@ -1176,12 +1181,20 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
     //final step - lets fill the purchase object with the rest that is needed
     purchase.date = date;
     purchase.owner_id = $scope.data.selectedGroup;
-    purchase.store_id = MarketService.market;
+    purchase.title = MarketService.market.purchasetitle;
+    purchase.store_id = MarketService.market.selectedStore;
     console.log(purchase);
+    /*
     Purchases.addPurchase(purchase).success(function(stuff){
       console.log(stuff);
-    });
+    });*/
 
+    //Doing localstorage Saving for now
+    PurchaseService.purchases = localStorage.getItem('purchases');
+    PurchaseService.purchases = PurchaseService.purchases || [];
+    PurchaseService.purchases.push(purchase);
+    localStorage.setItem('purchases', PurchaseService.purchases);
+    console.log(PurchaseService.purchases)
     //Clear stuff up.
     ProductService.products = [];
     $state.go('app.purchases_overview');
@@ -1204,7 +1217,8 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
   }
 
   $scope.chooseMarket = function() {
-    MarketService.market = $scope.data.selectedStore;
+    //MarketService.market = $scope.data.selectedStore;
+    MarketService.market = $scope.data;
     console.log(MarketService.market);
     $state.go('app.purchases');
   }
