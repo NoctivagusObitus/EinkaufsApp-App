@@ -1,9 +1,9 @@
 <ion-view style="" title="Einkaufsdetails">
     <ion-content class="has-header" padding="'true'">
+        <h4>{{purchase.title}}</h4>
+        <p>Datum: {{purchase.date | date:'medium'}}</p>
         <ion-list style="">
-            <ion-item style="" href="#/app/product_details" menu-close="">Produkt 1</ion-item>
-            <ion-item style="" href="#/app/product_details" menu-close="">Produkt 2</ion-item>
-            <ion-item style="" href="#/app/product_details" menu-close="">Produkt 3</ion-item>
+            <ion-item ng-repeat="product in purchase.cart" style="" href="#/app/purchases/{{myid}}/{{$index}}" menu-close="">{{product.article_costs.article.name}}</ion-item>
         </ion-list>
         <a style="" class="button  button-icon  icon-left ion-android-arrow-back" href="#/app/purchases_overview" menu-close=""></a>
     </ion-content>

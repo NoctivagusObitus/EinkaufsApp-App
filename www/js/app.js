@@ -75,19 +75,21 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js','einkaufsapp.cont
     })
 
     .state('app.purchases_details', {
-        url: '/purchases_details',
+        url: '/purchases/:id',
         views: {
             'menuContent': {
-                templateUrl: 'templates/purchases_details.html'
+                templateUrl: 'templates/purchases_details.html',
+                controller: 'PurchaseDetailCtrl'
             }
         }
     })
 
     .state('app.product_details', {
-        url: '/product_details',
+        url: '/purchases/:purchase/{id}',
         views: {
             'menuContent': {
-                templateUrl: 'templates/product_details.html'
+                templateUrl: 'templates/product_details.html',
+                controller: 'ProductDetailCtrl'
             }
         }
     })
@@ -139,7 +141,7 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js','einkaufsapp.cont
             }
         }
     })
-    
+
     .state('app.purchase-quantity', {
         url: '/purchase-quantity',
         views: {
@@ -149,25 +151,25 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js','einkaufsapp.cont
             }
         }
     })
-        
+
     .state('app.purchase-timeline', {
         url: '/purchase-timeline',
         views: {
             'menuContent': {
                 templateUrl: 'templates/ausgabenverlauf_chart.html',
                 controller : 'Purchase-TimelineCtrl'
-                
+
             }
         }
     })
-    
+
      .state('app.grouppurchase-timeline', {
         url: '/grouppurchase-timeline',
         views: {
             'menuContent': {
                 templateUrl: 'templates/gruppenverlauf_chart.html',
                 controller: 'GroupPurchase-TimelineCtrl'
-                
+
             }
         }
     })

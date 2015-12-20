@@ -1,10 +1,12 @@
 angular.module('einkaufsapp.controllers', ['chart.js'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state, PurchaseService) {
   $scope.username = localStorage.getItem('username');
 
   $scope.logout = function() {
+    var backup_purchase = JSON.parse(localStorage.getItem('purchases'));
     localStorage.clear();
+    localStorage.setItem('purchases', JSON.stringify(backup_purchase));
     $state.go('login');
   }
 })
@@ -709,16 +711,30 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
   var init = function() {
     var username = localStorage.getItem('username');
     var password = localStorage.getItem('password');
-    $scope.loginData = {
+    var loginData = {
       username: username,
       password: password
-    };
-  $scope.passwordshow={};
-  $scope.Checkbox ={};
-  var init = function(){
-      $scope.passwordshow.state = false;
-  };
+    }
+    $scope.passwordshow = {};
+    $scope.passwordshow.state = false;
+    $scope.Checkbox = {};
+    $scope.loginData = {};
+    $scope.error = {};
+
+    Login.save(loginData, function(response) {
+      if (response.status == "ok") {
+        $state.go('app.home');
+        localStorage.setItem('username', $scope.loginData.username);
+        localStorage.setItem('password', $scope.loginData.password);
+      } else {
+        console.log(response);
+        $scope.error.state = true;
+        $scope.error.message = response.message;
+      }
+    });
+  }
   init();
+
   $scope.showPassword = function(){
       if ($scope.Checkbox.value){
           $scope.passwordshow.state = true;
@@ -727,19 +743,6 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
           $scope.passwordshow.state = false ;
       }
   }
-    Login.save($scope.loginData, function(response) {
-      if (response.status == "ok") {
-        $state.go('app.home');
-        localStorage.setItem('username', $scope.loginData.username);
-        localStorage.setItem('password', $scope.loginData.password);
-      } else {
-        console.log(response);
-      }
-    });
-  }
-  init();
-  $scope.loginData = {};
-  $scope.error = {};
 
   $scope.doLogin = function() {
     Login.save($scope.loginData, function(response) {
@@ -1078,9 +1081,10 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 .controller('PurchasesCtrl', function($scope, Purchases, User, PurchaseService) {
   var init = function() {
-    PurchaseService.purchases = PurchaseService.purchases || localStorage.getItem('purchases') || [];
+    var json = JSON.parse(localStorage.getItem('purchases'))
+    PurchaseService.purchases = PurchaseService.purchases || json || [];
     $scope.purchases = PurchaseService.purchases;
-    console.log(PurchaseService.purchases);
+    console.dir(PurchaseService.purchases);
     /*
     User.getUserByName(localStorage.getItem('username')).success(function(user) {
       Purchases.getPurchasesByOwner(user[0].id).success(function(purchases) {
@@ -1193,7 +1197,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
     PurchaseService.purchases = localStorage.getItem('purchases');
     PurchaseService.purchases = PurchaseService.purchases || [];
     PurchaseService.purchases.push(purchase);
-    localStorage.setItem('purchases', PurchaseService.purchases);
+    localStorage.setItem('purchases', JSON.stringify(PurchaseService.purchases));
     console.log(PurchaseService.purchases)
     //Clear stuff up.
     ProductService.products = [];
@@ -1266,4 +1270,24 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
       alert("can't get location.. sorry");
     });
   }
-});
+})
+
+.controller('PurchaseDetailCtrl', function($scope, $stateParams, PurchaseService){
+  var json = JSON.parse(localStorage.getItem('purchases'))
+  PurchaseService.purchases = PurchaseService.purchases || json || [];
+  var purchaseindex = $stateParams.id;
+  console.log(purchaseindex);
+  var purchase = PurchaseService.purchases[purchaseindex];
+  console.log(purchase);
+  $scope.purchase = purchase;
+  $scope.myid = purchaseindex;
+})
+
+.controller('ProductDetailCtrl', function($scope, PurchaseService, $stateParams){
+  var json = JSON.parse(localStorage.getItem('purchases'))
+  PurchaseService.purchases = PurchaseService.purchases || json || [];
+  var purchaseindex = $stateParams.purchase;
+  console.log($stateParams);
+  var productindex = $stateParams.id;
+  $scope.product = PurchaseService.purchases[purchaseindex].cart[productindex];
+})

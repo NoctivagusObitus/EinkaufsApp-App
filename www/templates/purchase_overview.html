@@ -2,7 +2,9 @@
     <ion-content class="has-header" padding="'true'">
         <h1 style="">Übersicht</h1>
         <ion-list style="">
-            <ion-item ng-repeat="purchase in purchases"style="" menu-close="">{{purchase.title}}, {{purchase.Date}}</ion-item>
+            <ion-item ng-repeat="purchase in purchases"  href="#/app/purchases/{{$index}}" style="" menu-close="">
+              {{purchase.title}}
+              <span class="item-note">{{purchase.date | date:'medium'}}</span></ion-item>
         </ion-list>
         <a style="" class="button button-stable button-block  icon-left ion-android-add" href="#/app/market" menu-close="">Neuer Einkauf</a>
     </ion-content>
