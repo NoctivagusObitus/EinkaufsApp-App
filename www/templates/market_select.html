@@ -1,4 +1,4 @@
-<ion-view style="" title="Markt auswählen">
+<ion-view style="" title="Markt auswählen"  cache-view="false">
     <ion-content class="has-header" padding="'true'">
         <form style="" class="list">
             <form style="" class="list"></form>
@@ -11,9 +11,9 @@
                     <ion-list style="">
                         <label style="" name="market_search" class="item item-input">
                             <i class="icon ion-search placeholder-icon"></i>
-                            <input placeholder="Markt eingeben" type="search">
+                            <input placeholder="Markt eingeben" type="text" ng-model="newData.query">
                         </label>
-                        <ion-radio ng-repeat="store in stores" ng-model="data.selectedStore" ng-value="store._id">{{store.name}}</ion-radio>
+                        <ion-radio ng-repeat="store in stores | filter:newData.query | limitTo:5" ng-model="data.selectedStore" ng-value="store._id">{{store.name}}</ion-radio>
                     </ion-list>
                 </div>
             </div>

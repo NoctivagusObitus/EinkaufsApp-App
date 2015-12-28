@@ -124,11 +124,12 @@ angular.module('einkaufsapp', ['ionic', 'ngCordova','chart.js','einkaufsapp.cont
       }
     })
 
-      .state('app.settings', {
+    .state('app.settings', {
         url: '/settings',
         views: {
             'menuContent': {
                 templateUrl: 'templates/einstellungen.html',
+                controller: 'SettingsCtrl'
             }
         }
     })
