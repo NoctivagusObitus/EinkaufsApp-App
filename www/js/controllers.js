@@ -689,8 +689,6 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
       Login.save($scope.loginData, function(response) {
         if (response.status == "ok") {
           $state.go('app.home');
-          localStorage.setItem('username', $scope.loginData.username);
-          localStorage.setItem('password', $scope.loginData.password);
         } else {
           console.log(response);
         }
@@ -723,9 +721,9 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
     Login.save(loginData, function(response) {
       if (response.status == "ok") {
+        localStorage.setItem('username', loginData.username);
+        localStorage.setItem('password', loginData.password);
         $state.go('app.home');
-        localStorage.setItem('username', $scope.loginData.username);
-        localStorage.setItem('password', $scope.loginData.password);
       } else {
         console.log(response);
         $scope.error.state = true;
@@ -1099,7 +1097,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
   init();
   $scope.clearStorage = function(){
-    localStorage.setItem('purchases', []);
+    localStorage.setItem('purchases', JSON.stringify([]));
     $state.go('app.purchases', {reload: true});
   }
 })
@@ -1117,6 +1115,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
       ProductService.products = [];
     $scope.products = ProductService.products;
     $scope.product = [];
+    $scope.product.amount = 1;
   }
 
   init();
@@ -1165,8 +1164,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
       $scope.data = [];
       User.getUserByName(localStorage.getItem('username')).success(function(usera) {
         creatoruser = usera;
-        $scope.user = {};
-        $scope.user = usera[0];
+        $scope.user = creatoruser[0];
         Group.getGroupsForUser(creatoruser[0]._id).success(function(groups) {
           $scope.groups = groups;
         });

@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "EinkaufsApp",
   "version": "1.0.0",
-  "description": "test: An Ionic project",
+  "description": "Einkäufe verwalten etc. Projekt für SWE an der HfTL",
   "dependencies": {
     "angular-chart.js": "^0.8.8",
     "chart.js": "^1.0.2",

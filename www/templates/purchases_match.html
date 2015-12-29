@@ -3,7 +3,7 @@
         <form style="" class="list"></form>
         <h3 style="">Einkauf zuordnen</h3>
         <ion-list style="">
-            <ion-radio ng-model="data.selectedGroup" ng-value="user._id" style="">{{user.name}}</ion-radio>
+            <ion-radio ng-model="data.selectedGroup" ng-value="user._id" style="">{{user.username}}</ion-radio>
             <ion-radio ng-repeat="group in groups" ng-model="data.selectedGroup" ng-value="group._id">{{group.name}}</ion-radio>
         </ion-list>
         <a style="" class="button button-stable button-block " ng-click="finalize()" menu-close="">Fertig</a>
