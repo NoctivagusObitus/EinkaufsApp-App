@@ -29,14 +29,14 @@
                     <div class="row">
                     <div class = "col">Artielname</div>
                     <div class = "col">Anzahl</div>
-                    <div class = "col">&#216 Preis</div>
+                    
                     <div class = "col">Gesamtkosten</div>
                     </div>
                     <ion-item ng-repeat="Article in Articles | orderBy:'Amount':true |limitTo:5">
                     <div class="row">
                     <div class = "col">{{Article.Article}}</div>
                     <div class = "col">{{Article.Amount}}</div>
-                    <div class = "col">{{Article.Price}} €</div>
+                    
                     <div class = "col">{{Article.Price_Total}} €</div>
                     </div>
                     </ion-item>
