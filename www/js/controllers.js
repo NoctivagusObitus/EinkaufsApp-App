@@ -35,7 +35,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 })
 
 
-.controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state, User) {
+.controller('PurchaseQuantityCtrl', function($scope, $ionicModal, $state, User, PurchaseService) {
     var todayDate = new Date(), weekDate = new Date();
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
     $scope.Zeitraum = {
@@ -49,333 +49,27 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
     $scope.Gesamtausgaben = 0 ;
     $scope.AnzahlEinkaeufe = 0;
     $scope.username = localStorage.getItem('username');
-    var testdaten = [
-       [{
-           Einkauf_Name: 'Einkauf1',
-           Einkauf_ID:'000',
-           Date: new Date(2015, 11, 17),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Butter',
-               Amount : 2,
-               Price: 0.29
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 2,
-               Price: 5.49
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Salami',
-               Amount : 1,
-               Price: 1.49
-           },
-           {
-               Article: 'Pizza',
-               Amount : 3,
-               Price: 2.49
-           },
-           {
-               Article: 'Mehl',
-               Amount : 5,
-               Price: 0.39
-           },
-           {
-               Article: 'Pfefferminztee',
-               Amount : 1,
-               Price: 2.49
-           },
-           {
-               Article: 'Toilettenpapier',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Taschentücher',
-               Amount : 2,
-               Price: 3.49
-           }
-           ]
-        }],
-       [{
-           Einkauf_Name: 'Einkauf2',
-           Einkauf_ID:'001',
-           Date: new Date(2015, 11, 19),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Brötchen',
-               Amount : 16,
-               Price: 0.15
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 1,
-               Price: 5.49
-           },
-           {
-               Article: 'Badreiniger',
-               Amount : 2,
-               Price: 2.79
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Käse',
-               Amount : 1,
-               Price: 1.79
-           },
-           {
-               Article: 'Gouda',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Joghurt',
-               Amount : 12,
-               Price: 0.49
-           },
-           {
-               Article: 'Quark',
-               Amount : 1,
-               Price: 1.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf3',
-           Einkauf_ID:'002',
-           Date: new Date(2015, 11, 21),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Kaffee',
-               Amount : 1,
-               Price: 4.79
-           },
-           {
-               Article: 'Kaugummis',
-               Amount : 4,
-               Price: 1.49
-           },
-           {
-               Article: 'Berliner Pilsener',
-               Amount : 20,
-               Price: 0.89
-           },
-           {
-               Article: 'Gösser Naturradler',
-               Amount : 10,
-               Price: 0.79
-           },
-           {
-               Article: 'Coca Cola',
-               Amount : 12,
-               Price: 1.49
-           },
-           {
-               Article: 'Milch',
-               Amount : 5,
-               Price: 0.69
-           },
-           {
-               Article: 'Nutella',
-               Amount : 1,
-               Price: 4.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf4',
-           Einkauf_ID:'003',
-           Date: new Date(2015, 11, 22),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Äpfel',
-               Amount : 12,
-               Price: 0.19
-           },
-           {
-               Article: 'Banana',
-               Amount : 9,
-               Price: 0.29
-           },
-           {
-               Article: 'Iconia Tab One',
-               Amount : 1,
-               Price: 149.99
-           },
-           {
-               Article: 'Schokoweihnachtsmann',
-               Amount : 20,
-               Price: 1.19
-           },
-           {
-               Article: 'Geschenkpapier',
-               Amount : 1,
-               Price: 2.29
-           },
-           {
-               Article: 'Hackfleisch - gemischt',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Head and Shoulders Shampoo',
-               Amount : 3,
-               Price: 3.19
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf5',
-           Einkauf_ID:'005',
-           Date: new Date(2015, 11, 24),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Italienische Gewürze',
-               Amount : 1,
-               Price: 3.89
-           },
-           {
-               Article: 'Parmesan',
-               Amount : 4,
-               Price: 1.23
-           },
-           {
-               Article: 'Filter',
-               Amount : 3,
-               Price: 1.30
-           },
-           {
-               Article: 'Pueblo Tabak',
-               Amount : 3,
-               Price: 4.50
-           },
-           {
-               Article: 'OCB Papier',
-               Amount : 3,
-               Price: 1.20
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf6',
-           Einkauf_ID:'006',
-           Date: new Date(2015, 11, 26),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Maskara',
-               Amount : 1,
-               Price: 2.79
-           },
-           {
-               Article: 'Jil Sanders Sport for Women',
-               Amount : 1,
-               Price: 34.99
-           },
-           {
-               Article: 'Wasser still',
-               Amount : 10,
-               Price: 0.20
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'DVD Königreich der Himmel',
-               Amount : 1,
-               Price: 9.99
-           },
-           {
-               Article: 'Quark',
-               Amount : 3,
-               Price: 0.49
-           },
-           {
-               Article: 'Cornflakes',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Wodka - Smirnoff',
-               Amount : 1,
-               Price: 24.49
-           },
-           {
-               Article: 'Havanna Club 5 Anos',
-               Amount : 1,
-               Price: 45.99
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf7',
-           Einkauf_ID:'007',
-           Date: new Date(2015, 11, 30),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Raketen',
-               Amount : 4,
-               Price: 9.49
-           },
-           {
-               Article: 'Harzer Knaller',
-               Amount : 2,
-               Price: 4.49
-           },
-           {
-               Article: 'Tischfeuerwerk',
-               Amount : 5,
-               Price: 1.49
-           },
-           {
-               Article: 'Knallerbsen',
-               Amount : 3,
-               Price: 1.49
-           },
-           {
-               Article: 'Lippenstift',
-               Amount : 1,
-               Price: 1.39
-           }
-           ]
-       }]
 
-   ];
+    //Converting to Auswertungsformat
+    var real = PurchaseService.purchases || JSON.parse(localStorage.getItem('purchases'));
+    console.log(real);
+    var testdaten = [];
+    for(var i = 0; i < real.length; i++){
+      testdaten[i] = {};
+      testdaten[i].Einkauf_Name =  real[i].title;
+      testdaten[i].Einkauf_ID = i;
+      testdaten[i].Date = new Date(real[i].date);
+      testdaten[i].Owner_id = real[i].owner_id;
+      testdaten[i].Articles = [];
+      for(var j = 0; j < real[i].cart.length; j++){
+        testdaten[i].Articles[j] = {};
+        testdaten[i].Articles[j].Article = real[i].cart[j].article_costs.article.name;
+        testdaten[i].Articles[j].Amount = real[i].cart[j].amount;
+        testdaten[i].Articles[j].Price = real[i].cart[j].article_costs.costs.price;
+      }
+    }
+    console.log(testdaten);
+
    var username = localStorage.getItem('username');
    $scope.Auswerten = function (){
        $scope.Gesamtausgaben = 0; //Alles 0 setzen
@@ -385,26 +79,26 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
        for(var i = 0; i < testdaten.length;i++ ){
         var gefunden = false ;
-        if(res[0]._id == testdaten[i][0].Owner_id){
-        if(testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()  <= $scope.Zeitraum.Enddatum.getTime()){
+        if(res[0]._id == testdaten[i].Owner_id){
+        if(testdaten[i].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i].Date.getTime()  <= $scope.Zeitraum.Enddatum.getTime()){
          $scope.AnzahlEinkaeufe ++ ;
-         for(var j = 0; j<testdaten[i][0].Articles.length ; j++){
+         for(var j = 0; j<testdaten[i].Articles.length ; j++){
 
-             $scope.Gesamtausgaben =(testdaten[i][0].Articles[j].Amount * testdaten[i][0].Articles[j].Price) + $scope.Gesamtausgaben;
+             $scope.Gesamtausgaben =(testdaten[i].Articles[j].Amount * testdaten[i].Articles[j].Price) + $scope.Gesamtausgaben;
              if(Articles2.length <1 ) //erster Artikel wird immer gepusht
                  {
                      Articles2.push({
-                     Article: testdaten[i][0].Articles[j].Article,
-                     Amount: testdaten[i][0].Articles[j].Amount,
-                     Price : testdaten[i][0].Articles[j].Price,
+                     Article: testdaten[i].Articles[j].Article,
+                     Amount: testdaten[i].Articles[j].Amount,
+                     Price : testdaten[i].Articles[j].Price,
                      Price_Total : 0
                      });
                  }else {
                      for(var k = 0; k< Articles2.length; k ++){           //Überprüfen ob Artikel bereits in Array
-                         if(Articles2[k].Article == testdaten[i][0].Articles[j].Article){   //Wenn vorhanden dann addieren
-                             Articles2[k].Price = ((Articles2[k].Price * Articles2[k].Amount)+(testdaten[i][0].Articles[j].Amount * testdaten[i]   [0].Articles[j].Price)) /  (Articles2[k].Amount + testdaten[i][0].Articles[j].Amount); //Preisdurchschnitt errechnen
+                         if(Articles2[k].Article == testdaten[i].Articles[j].Article){   //Wenn vorhanden dann addieren
+                             Articles2[k].Price = ((Articles2[k].Price * Articles2[k].Amount)+(testdaten[i].Articles[j].Amount * testdaten[i].Articles[j].Price)) /  (Articles2[k].Amount + testdaten[i].Articles[j].Amount); //Preisdurchschnitt errechnen
                              Articles2[k].Price = Math.round(100 * Articles2[k].Price)/100 //runden
-                             Articles2[k].Amount = Articles2[k].Amount + testdaten[i][0].Articles[j].Amount; //Anzahl zusammen addieren
+                             Articles2[k].Amount = Articles2[k].Amount + testdaten[i].Articles[j].Amount; //Anzahl zusammen addieren
 
                              gefunden = true ;
                              break; //Element gefunden break
@@ -413,9 +107,9 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
                      if(gefunden == false){
                            Articles2.push({
-                           Article: testdaten[i][0].Articles[j].Article,
-                           Amount: testdaten[i][0].Articles[j].Amount,
-                           Price : testdaten[i][0].Articles[j].Price,
+                           Article: testdaten[i].Articles[j].Article,
+                           Amount: testdaten[i].Articles[j].Amount,
+                           Price : testdaten[i].Articles[j].Price,
                            Price_Total : 0
                            });
                      };
@@ -438,7 +132,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 })
 
-.controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state, User) {
+.controller('Purchase-TimelineCtrl', function($scope, $ionicModal, $state, User, PurchaseService) {
     var todayDate = new Date(), weekDate = new Date();
     var Tagespreis;
 
@@ -447,345 +141,36 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         Startdatum: weekDate ,
         Enddatum : new Date ()
     };
-    var testdaten = [
-       [{
-           Einkauf_Name: 'Einkauf1',
-           Einkauf_ID:'000',
-           Date: new Date(2015, 11, 17),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Butter',
-               Amount : 2,
-               Price: 0.29
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 2,
-               Price: 5.49
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Salami',
-               Amount : 1,
-               Price: 1.49
-           },
-           {
-               Article: 'Pizza',
-               Amount : 3,
-               Price: 2.49
-           },
-           {
-               Article: 'Mehl',
-               Amount : 5,
-               Price: 0.39
-           },
-           {
-               Article: 'Pfefferminztee',
-               Amount : 1,
-               Price: 2.49
-           },
-           {
-               Article: 'Toilettenpapier',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Taschentücher',
-               Amount : 2,
-               Price: 3.49
-           }
-           ]
-        }],
-       [{
-           Einkauf_Name: 'Einkauf2',
-           Einkauf_ID:'001',
-           Date: new Date(2015, 11, 19),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Brötchen',
-               Amount : 16,
-               Price: 0.15
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 1,
-               Price: 5.49
-           },
-           {
-               Article: 'Badreiniger',
-               Amount : 2,
-               Price: 2.79
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Käse',
-               Amount : 1,
-               Price: 1.79
-           },
-           {
-               Article: 'Gouda',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Joghurt',
-               Amount : 12,
-               Price: 0.49
-           },
-           {
-               Article: 'Quark',
-               Amount : 1,
-               Price: 1.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf3',
-           Einkauf_ID:'002',
-           Date: new Date(2015, 11, 21),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Kaffee',
-               Amount : 1,
-               Price: 4.79
-           },
-           {
-               Article: 'Kaugummis',
-               Amount : 4,
-               Price: 1.49
-           },
-           {
-               Article: 'Berliner Pilsener',
-               Amount : 20,
-               Price: 0.89
-           },
-           {
-               Article: 'Gösser Naturradler',
-               Amount : 10,
-               Price: 0.79
-           },
-           {
-               Article: 'Coca Cola',
-               Amount : 12,
-               Price: 1.49
-           },
-           {
-               Article: 'Milch',
-               Amount : 5,
-               Price: 0.69
-           },
-           {
-               Article: 'Nutella',
-               Amount : 1,
-               Price: 4.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf4',
-           Einkauf_ID:'003',
-           Date: new Date(2015, 11, 22),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Äpfel',
-               Amount : 12,
-               Price: 0.19
-           },
-           {
-               Article: 'Banana',
-               Amount : 9,
-               Price: 0.29
-           },
-           {
-               Article: 'Iconia Tab One',
-               Amount : 1,
-               Price: 149.99
-           },
-           {
-               Article: 'Schokoweihnachtsmann',
-               Amount : 20,
-               Price: 1.19
-           },
-           {
-               Article: 'Geschenkpapier',
-               Amount : 1,
-               Price: 2.29
-           },
-           {
-               Article: 'Hackfleisch - gemischt',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Head and Shoulders Shampoo',
-               Amount : 3,
-               Price: 3.19
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf5',
-           Einkauf_ID:'005',
-           Date: new Date(2015, 11, 24),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Italienische Gewürze',
-               Amount : 1,
-               Price: 3.89
-           },
-           {
-               Article: 'Parmesan',
-               Amount : 4,
-               Price: 1.23
-           },
-           {
-               Article: 'Filter',
-               Amount : 3,
-               Price: 1.30
-           },
-           {
-               Article: 'Pueblo Tabak',
-               Amount : 3,
-               Price: 4.50
-           },
-           {
-               Article: 'OCB Papier',
-               Amount : 3,
-               Price: 1.20
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf6',
-           Einkauf_ID:'006',
-           Date: new Date(2015, 11, 26),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Maskara',
-               Amount : 1,
-               Price: 2.79
-           },
-           {
-               Article: 'Jil Sanders Sport for Women',
-               Amount : 1,
-               Price: 34.99
-           },
-           {
-               Article: 'Wasser still',
-               Amount : 10,
-               Price: 0.20
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'DVD Königreich der Himmel',
-               Amount : 1,
-               Price: 9.99
-           },
-           {
-               Article: 'Quark',
-               Amount : 3,
-               Price: 0.49
-           },
-           {
-               Article: 'Cornflakes',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Wodka - Smirnoff',
-               Amount : 1,
-               Price: 24.49
-           },
-           {
-               Article: 'Havanna Club 5 Anos',
-               Amount : 1,
-               Price: 45.99
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf7',
-           Einkauf_ID:'007',
-           Date: new Date(2015, 11, 30),
-           Owner_id : '564e2efd0462fbc12ad2c050',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Raketen',
-               Amount : 4,
-               Price: 9.49
-           },
-           {
-               Article: 'Harzer Knaller',
-               Amount : 2,
-               Price: 4.49
-           },
-           {
-               Article: 'Tischfeuerwerk',
-               Amount : 5,
-               Price: 1.49
-           },
-           {
-               Article: 'Knallerbsen',
-               Amount : 3,
-               Price: 1.49
-           },
-           {
-               Article: 'Lippenstift',
-               Amount : 1,
-               Price: 1.39
-           }
-           ]
-       }]
+    //Converting to Auswertungsformat
+    var real = PurchaseService.purchases || JSON.parse(localStorage.getItem('purchases'));
+    var testdaten = [];
+    for(var i = 0; i < real.length; i++){
+      testdaten[i] = {};
+      testdaten[i].Einkauf_Name =  real[i].title;
+      testdaten[i].Einkauf_ID = i;
+      testdaten[i].Date = new Date(real[i].date);
+      testdaten[i].Owner_id = real[i].owner_id;
+      testdaten[i].Articles = [];
+      for(var j = 0; j < real[i].cart.length; j++){
+        testdaten[i].Articles[j] = {};
+        testdaten[i].Articles[j].Article = real[i].cart[j].article_costs.article.name;
+        testdaten[i].Articles[j].Amount = real[i].cart[j].amount;
+        testdaten[i].Articles[j].Price = real[i].cart[j].article_costs.costs.price;
+      }
+    }
 
-   ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
     $scope.Auswerten = function(){
        var label = [];
        var Daten = [];
        testdaten = sort_select(testdaten);
        User.getUserByName(localStorage.getItem('username')).success(function(res) {
            for(var i = 0; i < testdaten.length;i++ ){
-               if(res[0]._id == testdaten[i][0].Owner_id && testdaten[i][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i][0].Date.getTime()                     <= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
+               if(res[0]._id == testdaten[i].Owner_id && testdaten[i].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[i].Date.getTime() <= $scope.Zeitraum.Enddatum.getTime()){                //Bedingung im Zeitraum und Owner des Einkauf = User
 
-                   label.push(testdaten[i][0].Date.getDate() +"." + (testdaten[i][0].Date.getMonth()+1) + "." + testdaten[i][0].Date.getFullYear());
+                   label.push(testdaten[i].Date.getDate() +"." + (testdaten[i].Date.getMonth()+1) + "." + testdaten[i].Date.getFullYear());
                    Tagespreis = 0; //Nullsetzen
-                   for(var j = 0; j< testdaten[i][0].Articles.length; j++){
-                       Tagespreis = Math.round(100 *(Tagespreis + (testdaten[i][0].Articles[j].Price * testdaten[i][0].Articles[j].Amount)))/100;
+                   for(var j = 0; j< testdaten[i].Articles.length; j++){
+                       Tagespreis = Math.round(100 *(Tagespreis + (testdaten[i].Articles[j].Price * testdaten[i].Articles[j].Amount)))/100;
                    }
                    Daten.push(Tagespreis);
                };//if User = Owner Ende
@@ -805,7 +190,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         var temp;
         for(var i = 0; i < testdaten.length;i++ ){
             for(var j= i+1; j < testdaten.length;j++){
-                if(testdaten[j][0].Date.getTime()< testdaten[i][0].Date.getTime()){  // Tausch
+                if(testdaten[j].Date.getTime()< testdaten[i].Date.getTime()){  // Tausch
                     temp = testdaten[i];
                     testdaten[i] = testdaten[j];
                     testdaten[j] = temp;
@@ -818,7 +203,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
 
 })
 
-.controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $stateParams, $state, User, Group) {
+.controller('GroupPurchase-TimelineCtrl', function($scope, $ionicModal, $stateParams, $state, User, Group, PurchaseService) {
     var todayDate = new Date(), weekDate = new Date();
     weekDate.setTime(todayDate.getTime()-(30*24*3600000));//Startdatum auf - 30 Tage von aktuellem Datum
     $scope.Zeitraum = {
@@ -829,334 +214,24 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
         Daten : [],
         label : []
     };
-    var testdaten = [
-       [{
-           Einkauf_Name: 'Einkauf1',
-           Einkauf_ID:'000',
-           Date: new Date(2015, 11, 17),
-           Owner_id : '5660c46822eca772b6919a87',
-           Articles: [{
-               Article: 'Butter',
-               Amount : 2,
-               Price: 0.29
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 2,
-               Price: 5.49
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Salami',
-               Amount : 1,
-               Price: 1.49
-           },
-           {
-               Article: 'Pizza',
-               Amount : 3,
-               Price: 2.49
-           },
-           {
-               Article: 'Mehl',
-               Amount : 5,
-               Price: 0.39
-           },
-           {
-               Article: 'Pfefferminztee',
-               Amount : 1,
-               Price: 2.49
-           },
-           {
-               Article: 'Toilettenpapier',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Taschentücher',
-               Amount : 2,
-               Price: 3.49
-           }
-           ]
-        }],
-       [{
-           Einkauf_Name: 'Einkauf2',
-           Einkauf_ID:'001',
-           Date: new Date(2015, 11, 19),
-           Owner_id : '5661841022eca772b6919a92',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Brötchen',
-               Amount : 16,
-               Price: 0.15
-           },
-           {
-               Article: 'Zigaretten',
-               Amount : 1,
-               Price: 5.49
-           },
-           {
-               Article: 'Badreiniger',
-               Amount : 2,
-               Price: 2.79
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Käse',
-               Amount : 1,
-               Price: 1.79
-           },
-           {
-               Article: 'Gouda',
-               Amount : 1,
-               Price: 4.49
-           },
-           {
-               Article: 'Joghurt',
-               Amount : 12,
-               Price: 0.49
-           },
-           {
-               Article: 'Quark',
-               Amount : 1,
-               Price: 1.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf3',
-           Einkauf_ID:'002',
-           Date: new Date(2015, 11, 21),
-           Owner_id : '5661841022eca772b6919a92',
-           Articles: [{
-               Article: 'Kaffee',
-               Amount : 1,
-               Price: 4.79
-           },
-           {
-               Article: 'Kaugummis',
-               Amount : 4,
-               Price: 1.49
-           },
-           {
-               Article: 'Berliner Pilsener',
-               Amount : 20,
-               Price: 0.89
-           },
-           {
-               Article: 'Gösser Naturradler',
-               Amount : 10,
-               Price: 0.79
-           },
-           {
-               Article: 'Coca Cola',
-               Amount : 12,
-               Price: 1.49
-           },
-           {
-               Article: 'Milch',
-               Amount : 5,
-               Price: 0.69
-           },
-           {
-               Article: 'Nutella',
-               Amount : 1,
-               Price: 4.49
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf4',
-           Einkauf_ID:'003',
-           Date: new Date(2015, 11, 22),
-           Owner_id : '5661841022eca772b6919a92',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Äpfel',
-               Amount : 12,
-               Price: 0.19
-           },
-           {
-               Article: 'Banana',
-               Amount : 9,
-               Price: 0.29
-           },
-           {
-               Article: 'Iconia Tab One',
-               Amount : 1,
-               Price: 149.99
-           },
-           {
-               Article: 'Schokoweihnachtsmann',
-               Amount : 20,
-               Price: 1.19
-           },
-           {
-               Article: 'Geschenkpapier',
-               Amount : 1,
-               Price: 2.29
-           },
-           {
-               Article: 'Hackfleisch - gemischt',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Head and Shoulders Shampoo',
-               Amount : 3,
-               Price: 3.19
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf5',
-           Einkauf_ID:'005',
-           Date: new Date(2015, 11, 24),
-           Owner_id : '5661841022eca772b6919a92',
-           Articles: [{
-               Article: 'Italienische Gewürze',
-               Amount : 1,
-               Price: 3.89
-           },
-           {
-               Article: 'Parmesan',
-               Amount : 4,
-               Price: 1.23
-           },
-           {
-               Article: 'Filter',
-               Amount : 3,
-               Price: 1.30
-           },
-           {
-               Article: 'Pueblo Tabak',
-               Amount : 3,
-               Price: 4.50
-           },
-           {
-               Article: 'OCB Papier',
-               Amount : 3,
-               Price: 1.20
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf6',
-           Einkauf_ID:'006',
-           Date: new Date(2015, 11, 26),
-           Owner_id : '5660c46822eca772b6919a87',
-           Articles: [{
-               Article: 'Maskara',
-               Amount : 1,
-               Price: 2.79
-           },
-           {
-               Article: 'Jil Sanders Sport for Women',
-               Amount : 1,
-               Price: 34.99
-           },
-           {
-               Article: 'Wasser still',
-               Amount : 10,
-               Price: 0.20
-           },
-           {
-               Article: 'Toastbrot',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'DVD Königreich der Himmel',
-               Amount : 1,
-               Price: 9.99
-           },
-           {
-               Article: 'Quark',
-               Amount : 3,
-               Price: 0.49
-           },
-           {
-               Article: 'Cornflakes',
-               Amount : 1,
-               Price: 3.49
-           },
-           {
-               Article: 'Wodka - Smirnoff',
-               Amount : 1,
-               Price: 24.49
-           },
-           {
-               Article: 'Havanna Club 5 Anos',
-               Amount : 1,
-               Price: 45.99
-           }
-           ]
-       }],
-       [{
-           Einkauf_Name: 'Einkauf7',
-           Einkauf_ID:'007',
-           Date: new Date(2015, 11, 30),
-           Owner_id : '5660c46822eca772b6919a87',
-           Articles: [{
-               Article: 'Brot',
-               Amount : 2,
-               Price: 1.79
-           },
-           {
-               Article: 'Marmelade',
-               Amount : 1,
-               Price: 0.49
-           },
-           {
-               Article: 'Raketen',
-               Amount : 4,
-               Price: 9.49
-           },
-           {
-               Article: 'Harzer Knaller',
-               Amount : 2,
-               Price: 4.49
-           },
-           {
-               Article: 'Tischfeuerwerk',
-               Amount : 5,
-               Price: 1.49
-           },
-           {
-               Article: 'Knallerbsen',
-               Amount : 3,
-               Price: 1.49
-           },
-           {
-               Article: 'Lippenstift',
-               Amount : 1,
-               Price: 1.39
-           }
-           ]
-       }]
 
-   ]; //Testdaten der Einkäufe hier später Abfrage einfügen und auf Testdaten legen anpassen nicht vergessen
-    
+    //Converting to Auswertungsformat
+    var real = PurchaseService.purchases || JSON.parse(localStorage.getItem('purchases'));
+    var testdaten = [];
+    for(var i = 0; i < real.length; i++){
+      testdaten[i] = {};
+      testdaten[i].Einkauf_Name =  real[i].title;
+      testdaten[i].Einkauf_ID = i;
+      testdaten[i].Date = new Date(real[i].date);
+      testdaten[i].Owner_id = real[i].owner_id;
+      testdaten[i].Articles = [];
+      for(var j = 0; j < real[i].cart.length; j++){
+        testdaten[i].Articles[j] = {};
+        testdaten[i].Articles[j].Article = real[i].cart[j].article_costs.article.name;
+        testdaten[i].Articles[j].Amount = real[i].cart[j].amount;
+        testdaten[i].Articles[j].Price = real[i].cart[j].article_costs.costs.price;
+      }
+    }
 // 5660c46822eca772b6919a87 erste Grp ID
 // 5661841022eca772b6919a92 2. grp id
     $scope.Auswerten = function(){
@@ -1171,16 +246,16 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
            for(var i = 0; i< groups.length; i++){
 
                for(var j = 0; j< testdaten.length; j++){
-                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
+                   if(groups[i]._id == testdaten[j].Owner_id && testdaten[j].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
                        var label_vorhanden = false;
-                       var temp = testdaten[j][0].Date;
+                       var temp = testdaten[j].Date;
                        for(var k=0;k< chartDatenMaster.label.length;k++){ //Label belegen
                            if(temp ==chartDatenMaster.label[k]){
                                label_vorhanden = true;
                            };
                        };//for K Ende
                        if(label_vorhanden ==false){
-                           chartDatenMaster.label[chartDatenMaster.label.length] = testdaten[j][0].Date;
+                           chartDatenMaster.label[chartDatenMaster.label.length] = testdaten[j].Date;
                        };
                    };//If in timescope und Group is Owner of Einkauf
                };//Ende For Testdaten length
@@ -1190,7 +265,7 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
        //Datenpunkte ermitteln
        for(var i = 0; i< groups.length; i++){
                for(var j = 0; j< testdaten.length; j++){
-                   if(groups[i]._id == testdaten[j][0].Owner_id && testdaten[j][0].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j][0].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
+                   if(groups[i]._id == testdaten[j].Owner_id && testdaten[j].Date.getTime() >= $scope.Zeitraum.Startdatum.getTime() && testdaten[j].Date.getTime()<= $scope.Zeitraum.Enddatum.getTime()){
                    var series_vorhanden = false;
                    var daten_leer_temp = [];
                    var datenpunkt_temp = 0;
@@ -1216,14 +291,14 @@ angular.module('einkaufsapp.controllers', ['chart.js'])
                    //Datenpunkte belegen
 
                    //datenpunkt_erzeugen
-                   for(var y = 0; y < testdaten[j][0].Articles.length; y++){
-                       datenpunkt_temp = datenpunkt_temp +( testdaten[j][0].Articles[y].Amount * testdaten[j][0].Articles[y].Price ) ;
+                   for(var y = 0; y < testdaten[j].Articles.length; y++){
+                       datenpunkt_temp = datenpunkt_temp +( testdaten[j].Articles[y].Amount * testdaten[j].Articles[y].Price ) ;
                    };//Temp_Datenpunkt ende
                    datenpunkt_temp = ( Math.round( datenpunkt_temp * 100 ) ) / 100; //Runden
                    //Datenpunkt zuweisen an die richtige Stelle im Array
                    for ( var z = 0 ; z < chartDatenMaster.label.length ; z++) {
 
-                       if(chartDatenMaster.label[z] == testdaten[j][0].Date ){ //Wenn Position gefunden
+                       if(chartDatenMaster.label[z] == testdaten[j].Date ){ //Wenn Position gefunden
 
                            chartDatenMaster.Daten[chartDatenMaster.Series.length - 1][z] = datenpunkt_temp;
                        };
